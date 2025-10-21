@@ -1,6 +1,6 @@
-package org.re.reforwardingbe.sea.main.model.entity;
+package org.re.reforwardingbe.sea.main.domain.entity;
 
-import org.re.reforwardingbe.sea.main.model.vo.*;
+import org.re.reforwardingbe.sea.main.domain.vo.*;
 
 import java.util.List;
 import java.util.UUID;
