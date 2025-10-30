@@ -17,7 +17,6 @@ public class BL {
     private Mark mark;
     private Description description;
     private EDI edi;
-    private AMSAddress amsAddress;
 
     private List <Container> container;
     private List<ContainerSummary> containerSummary;
