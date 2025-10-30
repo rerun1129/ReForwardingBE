@@ -8,6 +8,7 @@ import java.util.UUID;
 public class BL {
 
     private UUID id;
+    private Header header;
     private Party party;
     private Schedule schedule;
     private Issue issue;
