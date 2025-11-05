@@ -19,8 +19,7 @@ public class BL {
     private Description description;
     private EDI edi;
 
-    private List <Container> container;
-    private List<ContainerSummary> containerSummary;
+    private List<Container> container;
     private List<HSCode> hsCode;
     private List<Manifest> manifest;
 }

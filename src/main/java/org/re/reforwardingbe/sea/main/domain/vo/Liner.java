@@ -1,4 +1,4 @@
 package org.re.reforwardingbe.sea.main.domain.vo;
 
-public class ContainerSummary {
+public record Liner(String code, String name) {
 }
