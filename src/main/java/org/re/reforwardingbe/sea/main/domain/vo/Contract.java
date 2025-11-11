@@ -1,8 +1,4 @@
 package org.re.reforwardingbe.sea.main.domain.vo;
 
-public class Contract {
-    private Incoterms incoterms;
-    private FreightTerm freightTerm;
-    private PayableAt payableAt;
-    private Boolean isTriangleTrade;
+public record Contract(Incoterms incoterms, FreightTerm freightTerm, PayableAt payableAt, Boolean isTriangleTrade) {
 }
