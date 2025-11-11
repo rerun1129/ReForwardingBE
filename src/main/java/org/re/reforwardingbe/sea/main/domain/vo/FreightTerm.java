@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum FreightTerm {
     COLLECT("C"),
-    PREPAID("D");
+    PREPAID("P");
 
     private final String code;
 

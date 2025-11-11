@@ -1,10 +1,4 @@
 package org.re.reforwardingbe.sea.main.domain.vo;
 
-public class Performance {
-    private Customer customer;
-    private Partner documentPartner;
-    private Partner settlementPartner;
-    private BusinessUser salesMan;
-    private BusinessUser operator;
-    private BusinessTeam businessTeam;
+public record Performance(Customer customer, Partner documentPartner, Partner settlementPartner, BusinessUser salesMan, BusinessUser operator, BusinessTeam businessTeam) {
 }

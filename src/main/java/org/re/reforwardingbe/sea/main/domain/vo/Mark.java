@@ -1,5 +1,4 @@
 package org.re.reforwardingbe.sea.main.domain.vo;
 
-public class Mark {
-    private String marksAndNumbers;
+public record Mark(String marksAndNumbers) {
 }
