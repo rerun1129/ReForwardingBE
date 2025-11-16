@@ -164,11 +164,11 @@ class SeaMainInputPortTest {
      * 1. 저장된 B/L 메인이 조회된다.
      *   1) B/L 메인의 존재 여부는 해당 B/L 메인의 ID로 리포지토리를 검색하여 확인한다.(모든 엔티티의 구조를 탐색할 필요가 없음)
      * 2. 저장된 Container가 조회된다.
-     *   1) Container의 존재 여부는 해당 B/L 메인의 ID + Container의 서브 ID로 리포지토리를 검색하여 확인한다.
+     *   1) Container의 존재 여부는 해당 B/L 메인의 ID로 모든 Container를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
      * 3. 저장된 HSCode가 조회된다.
-     *   1) HSCode의 존재 여부는 해당 B/L 메인의 ID + HSCode의 서브 ID로 리포지토리를 검색하여 확인한다.
+     *   1) HSCode의 존재 여부는 해당 B/L 메인의 ID로 모든 HSCode를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
      * 4. 저장된 Manifest가 조회된다.
-     *   1) Manifest의 존재 여부는 해당 B/L 메인의 ID + Manifest의 서브 ID로 리포지토리를 검색하여 확인한다.
+     *   1) Manifest의 존재 여부는 해당 B/L 메인의 ID로 모든 Manifest를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
      */
     /*
      * TODO [3] 삭제
@@ -261,5 +261,52 @@ class SeaMainInputPortTest {
         //then
         assertEquals(fixturesManifests.size(), hsCodeCount + 1);
         assertEquals(fixtureId, fixturesManifests.stream().filter(item -> item.getManifestId().equals(manifest.getManifestId())).findFirst().get().getRootBlId());
+    }
+
+    @Test
+    @DisplayName("B/L 메인이 조회된다")
+    void testFindBlMain() {
+        //given
+        UUID blMainId = blFixture1.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        //then
+        assertEquals(blFixture1.getId(), blMainById.getId());
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 Container가 조회된다")
+    void testFindBlContainer() {
+        //given
+        UUID blMainId = blFixture2.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <Container> allContainers = blMainById.findAllContainers();
+        //then
+        assertEquals(allContainers.size(), blFixture2.findAllContainers().size());
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 HSCode가 조회된다")
+    void testFindBlHSCode() {
+        //given
+        UUID blMainId = blFixture2.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <HSCode> allHsCodes = blMainById.findAllHsCodes();
+        //then
+        assertEquals(allHsCodes.size(), blFixture2.findAllHsCodes().size());
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 Manifest가 조회된다")
+    void testFindBlManifest() {
+        //given
+        UUID blMainId = blFixture2.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <Manifest> allManifests = blMainById.findAllManifests();
+        //then
+        assertEquals(allManifests.size(), blFixture2.findAllManifests().size());
     }
 }
