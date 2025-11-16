@@ -270,11 +270,27 @@ class SeaMainInputPortTest {
         int containerCount = fixturesContainers.size();
         //when
         blFixture1.addContainer(container);
-        seaMainOutputPort.saveBlMain(blFixture1);
         //then
         assertEquals(fixturesContainers.size(), containerCount + 1);
         assertEquals(fixtureId, fixturesContainers.stream().filter(item -> item.getContainerId().equals(container.getContainerId())).findFirst().get().getRootBlId());
     }
+
+    @Test
+    @DisplayName("B/L 내부의 임의 객체 저장 후 B/L 메인이 Insert가 아닌 Update가 된다[저장 환경 독립적 테스트]")
+    void testUpdateBlBySaveObject(){
+        //given
+        BL fixtureForContainerTest = blFixture1;
+        UUID fixtureId = fixtureForContainerTest.getId();
+        Container container = new Container(fixtureId, "ContainerNumberGiven1", F0FH);
+        //when
+        blFixture1.addContainer(container);
+        List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
+        int saveMainBeforeSize = blMainAll.size();
+        seaMainOutputPort.saveBlMain(blFixture1);
+        //then
+        assertEquals(blMainAll.size(), saveMainBeforeSize);
+    }
+
 
     @Test
     @DisplayName("B/L 내부의 HSCode가 저장된다")
@@ -287,7 +303,6 @@ class SeaMainInputPortTest {
         int hsCodeCount = fixturesHsCodes.size();
         //when
         blFixture1.addHsCode(hsCode);
-        seaMainOutputPort.saveBlMain(blFixture1);
         //then
         assertEquals(fixturesHsCodes.size(), hsCodeCount + 1);
         assertEquals(fixtureId, fixturesHsCodes.stream().filter(item -> item.getHsCodeId().equals(hsCode.getHsCodeId())).findFirst().get().getRootBlId());
@@ -304,7 +319,6 @@ class SeaMainInputPortTest {
         int hsCodeCount = fixturesManifests.size();
         //when
         blFixture1.addManifest(manifest);
-        seaMainOutputPort.saveBlMain(blFixture1);
         //then
         assertEquals(fixturesManifests.size(), hsCodeCount + 1);
         assertEquals(fixtureId, fixturesManifests.stream().filter(item -> item.getManifestId().equals(manifest.getManifestId())).findFirst().get().getRootBlId());

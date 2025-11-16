@@ -22,7 +22,12 @@ public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
 
     @Override
     public void saveBlMain(BL bl) {
-        inMemoryBlMainList.add(bl);
+        if(inMemoryBlMainList.stream().noneMatch(blMain -> blMain.getId().equals(bl.getId()))){
+            inMemoryBlMainList.add(bl);
+        }else {
+            inMemoryBlMainList.removeIf(blMain -> blMain.getId().equals(bl.getId()));
+            inMemoryBlMainList.add(bl);
+        }
     }
 
     @Override
