@@ -1,22 +1,34 @@
 package org.re.reforwardingbe.sea.main.domain.vo;
 
+import lombok.Getter;
+
 import java.math.BigDecimal;
+import java.util.UUID;
 
 public class Container {
+    @Getter
+    private final UUID rootBlId;
+    @Getter
+    private final UUID containerId;
     private final String containerNo;
     private final ContainerType containerType;
-    private final String containerSealNumber1;
-    private final String containerSealNumber2;
-    private final String containerSealNumber3;
-    private final String containerSealNumber4;
-    private final String containerSealNumber5;
-    private final String containerSealNumber6;
-    private final Integer packageQuantity;
-    private final PackageUnit packageUnit;
-    private final BigDecimal grossWeight;
-    private final BigDecimal cbm;
+    private String containerSealNumber1;
+    private String containerSealNumber2;
+    private String containerSealNumber3;
+    private String containerSealNumber4;
+    private String containerSealNumber5;
+    private String containerSealNumber6;
+    private Integer packageQuantity;
+    private PackageUnit packageUnit;
+    private BigDecimal grossWeight;
+    private BigDecimal cbm;
 
-    public Container(String containerNo, ContainerType containerType, String containerSealNumber1, String containerSealNumber2, String containerSealNumber3, String containerSealNumber4, String containerSealNumber5, String containerSealNumber6, Integer packageQuantity, PackageUnit packageUnit, BigDecimal grossWeight, BigDecimal cbm) {
+    public Container(UUID rootBlId, String containerNo, ContainerType containerType, String containerSealNumber1,
+                     String containerSealNumber2, String containerSealNumber3, String containerSealNumber4,
+                     String containerSealNumber5, String containerSealNumber6, Integer packageQuantity,
+                     PackageUnit packageUnit, BigDecimal grossWeight, BigDecimal cbm) {
+        this.rootBlId = rootBlId;
+        this.containerId = UUID.randomUUID();
         this.containerNo = containerNo;
         this.containerType = containerType;
         this.containerSealNumber1 = containerSealNumber1;
@@ -29,5 +41,12 @@ public class Container {
         this.packageUnit = packageUnit;
         this.grossWeight = grossWeight;
         this.cbm = cbm;
+    }
+
+    public Container(UUID rootBlId, String containerNo, ContainerType containerType) {
+        this.rootBlId = rootBlId;
+        this.containerId = UUID.randomUUID();
+        this.containerNo = containerNo;
+        this.containerType = containerType;
     }
 }

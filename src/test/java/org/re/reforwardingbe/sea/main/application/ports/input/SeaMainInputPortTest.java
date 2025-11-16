@@ -3,10 +3,13 @@ package org.re.reforwardingbe.sea.main.application.ports.input;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
 import org.re.reforwardingbe.sea.main.domain.entity.BL;
 import org.re.reforwardingbe.sea.main.domain.vo.*;
+import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryAdapter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -30,6 +33,8 @@ import static org.re.reforwardingbe.sea.main.domain.vo.UnknownClause1.*;
 import static org.re.reforwardingbe.sea.main.domain.vo.UnknownClause2.*;
 
 class SeaMainInputPortTest {
+    private final SeaMainOutputPort seaMainOutputPort = new SeaMainInMemoryAdapter();
+
     /*
     * TODO [0] 픽스쳐
     * 1. 초기 데이터 세팅은 테스트 클래스의 @BeforeEach에서 진행한다.
@@ -41,8 +46,9 @@ class SeaMainInputPortTest {
 
     @BeforeEach
     void init(){
+        UUID fixture1Id = UUID.randomUUID();
         blFixture1 = new BL(
-            UUID.randomUUID(),
+                fixture1Id,
             new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
             new Party(new Shipper("shipperCode1", "shipperName1", "shipperAddress1"),
                       new Consignee("consigneeCode1", "consigneeName1", "consigneeAddress1"),
@@ -82,16 +88,17 @@ class SeaMainInputPortTest {
                 """),
             new Description(SLC, STC, "SHEEPSKIN GOLF GLOVES"),
             new EDI("ediBlNo1", "ediBlItem1", EXPORT, new SeaPort("transshipmentPortCode1", "transshipmentPortName1")),
-            List.of(
-                new Container("ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, new BigDecimal("550.500"), new BigDecimal("0.550")),
-                new Container("ContainerNo1-2", F0FH, "", "", "", "", "", "", 50, CB, new BigDecimal("1000.000"), new BigDecimal("1.000"))
-            ),
-            List.of(new HSCode("010100", "horse", true), new HSCode("420100", "horse saddle", false)),
-            List.of(new Manifest("ManifestNo1-1", 50, CB, new BigDecimal("550.500")), new Manifest("ManifestNo1-2", 50, CB, new BigDecimal("1000.000")))
+            new ArrayList <>(List.of(
+                new Container(fixture1Id, "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, new BigDecimal("550.500"), new BigDecimal("0.550")),
+                new Container(fixture1Id, "ContainerNo1-2", F0FH, "", "", "", "", "", "", 50, CB, new BigDecimal("1000.000"), new BigDecimal("1.000"))
+                                    )),
+            new ArrayList <>(List.of(new HSCode(fixture1Id, "010100", "horse", true), new HSCode(fixture1Id, "420100", "horse saddle", false))),
+            new ArrayList <>(List.of(new Manifest(fixture1Id, "ManifestNo1-1", 50, CB, new BigDecimal("550.500")), new Manifest(fixture1Id, "ManifestNo1-2", 50, CB, new BigDecimal("1000.000"))))
         );
 
+        UUID fixture2Id = UUID.randomUUID();
         blFixture2 = new BL(
-            UUID.randomUUID(),
+                fixture2Id,
             new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
             new Party(new Shipper("shipperCode2", "shipperName2", "shipperAddress2"),
                       new Consignee("consigneeCode2", "consigneeName2", "consigneeAddress2"),
@@ -125,30 +132,32 @@ class SeaMainInputPortTest {
             new Mark("N/M"),
             new Description(SLC, STC, "9 CARTONS = 2,100 PIECES OF"),
             new EDI("ediBlNo2", "ediBlItem2", IMPORT, new SeaPort("transshipmentPortCode2", "transshipmentPortName2")),
-            List.of(
-                new Container("ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, new BigDecimal("1000.000"), new BigDecimal("0.800")),
-                new Container("ContainerNo2-2", T0FR, "", "", "", "", "", "", 60, CB, new BigDecimal("1700.000"), new BigDecimal("1.000"))
-            ),
-            List.of(new HSCode("870380", "Battery Electric Vehicle", true), new HSCode("850760", "Lithium-ion Battery", false)),
-            List.of(new Manifest("ManifestNo2-1", 40, CB, new BigDecimal("1000.000")), new Manifest("ManifestNo2-2", 60, CB, new BigDecimal("1700.000")))
+            new ArrayList <>(List.of(
+                new Container(fixture2Id, "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, new BigDecimal("1000.000"), new BigDecimal("0.800")),
+                new Container(fixture2Id, "ContainerNo2-2", T0FR, "", "", "", "", "", "", 60, CB, new BigDecimal("1700.000"), new BigDecimal("1.000"))
+            )),
+            new ArrayList <>(List.of(new HSCode(fixture2Id, "870380", "Battery Electric Vehicle", true), new HSCode(fixture2Id, "850760", "Lithium-ion Battery", false))),
+            new ArrayList <>(List.of(new Manifest(fixture2Id, "ManifestNo2-1", 40, CB, new BigDecimal("1000.000")), new Manifest(fixture2Id, "ManifestNo2-2", 60, CB, new BigDecimal("1700.000"))))
         );
+        seaMainOutputPort.saveBlMain(blFixture1);
+        seaMainOutputPort.saveBlMain(blFixture2);
     }
 
 
     /*
     * TODO [1] 저장
     * 1. B/L 메인이 저장된다.
-    *   1) 저장 여부는 해당 메서드의 호출 여부로 확인한다.
-    *   2) 저장 후 리포지토리에 데이터가 픽스쳐 + 1개 만큼 존재하는지 확인한다.
+    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 + 1개 만큼 존재하는지 확인한다.
+    *   2) 저장 후 자신의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
     * 2. B/L 내부의 Container가 저장된다.
-    *   1) 저장 여부는 해당 메서드의 호출 여부로 확인한다.
-    *   2) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Container 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Container 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
     * 3. B/L 내부의 HSCode가 저장된다.
-    *   1) 저장 여부는 해당 메서드의 호출 여부로 확인한다.
-    *   2) 저장 후 리포지토리에 데이터가 픽스쳐 내부 HSCode 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 HSCode 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
     * 4. B/L 내부의 Manifest가 저장된다.
-    *   1) 저장 여부는 해당 메서드의 호출 여부로 확인한다.
-    *   2) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Manifest 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Manifest 데이터 + 1개 만큼 존재하는지 확인한다.
+    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
     * */
     /*
      * TODO [2] 조회
@@ -181,39 +190,76 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 메인이 저장된다")
     void testSaveBlMain(){
         //given
-
+        UUID savedId = UUID.randomUUID();
+        BL blInputEssentialField = new BL(savedId,
+                                          new Header(HOUSE, "HouseNumberGiven1", FCL, ORIGINAL),
+                                          new Performance(new Customer("CustomerCodeGiven1", "CustomerNameGiven1"), new Partner("PartnerCodeGiven1", "PartnerNameGiven1", "PartnerAddressGiven1"),
+                                       new BusinessUser("UserCodeGiven1", "UserNameGiven1"), new BusinessTeam("TeamCodeGiven1", "TeamNameGiven1")
+                       ),
+                                          new Schedule("20251116", "20251118",
+                                    new SeaPort("POLCodeGiven1", "POLNameGiven1"), new SeaPort("PODCodeGiven1", "PODNameGiven1"),
+                                    new Vessel("VesselCodeGiven1", "VesselNameGiven1", "VesselCountryGiven1"), "VoyageNumberGiven1"
+                       )
+        );
+        List<BL> allBlsBeforeSave = seaMainOutputPort.findBlMainAll();
+        int blsBeforeSaveSize = allBlsBeforeSave.size();
         //when
-
+        seaMainOutputPort.saveBlMain(blInputEssentialField);
         //then
+        BL savedBl = seaMainOutputPort.findBlMainById(savedId);
+        List<BL> allBls = seaMainOutputPort.findBlMainAll();
+        assertEquals(allBls.size(), blsBeforeSaveSize + 1);
+        assertEquals(savedBl.getId(), savedId);
     }
 
     @Test
     @DisplayName("B/L 내부의 Container가 저장된다")
     void testSaveBlContainer(){
         //given
-
+        BL fixtureForContainerTest = blFixture1;
+        UUID fixtureId = fixtureForContainerTest.getId();
+        Container container = new Container(fixtureId, "ContainerNumberGiven1", F0FH);
+        List<Container> fixturesContainers = blFixture1.findAllContainers();
+        int containerCount = fixturesContainers.size();
         //when
-
+        blFixture1.addContainer(container);
+        seaMainOutputPort.saveBlMain(blFixture1);
         //then
+        assertEquals(fixturesContainers.size(), containerCount + 1);
+        assertEquals(fixtureId, fixturesContainers.stream().filter(item -> item.getContainerId().equals(container.getContainerId())).findFirst().get().getRootBlId());
     }
 
     @Test
     @DisplayName("B/L 내부의 HSCode가 저장된다")
     void testSaveBlHSCode(){
         //given
-
+        BL fixtureForContainerTest = blFixture1;
+        UUID fixtureId = fixtureForContainerTest.getId();
+        HSCode hsCode = new HSCode(fixtureId, "HSCodeGiven1", "Description", false);
+        List<HSCode> fixturesHsCodes = blFixture1.findAllHsCodes();
+        int hsCodeCount = fixturesHsCodes.size();
         //when
-
+        blFixture1.addHsCode(hsCode);
+        seaMainOutputPort.saveBlMain(blFixture1);
         //then
+        assertEquals(fixturesHsCodes.size(), hsCodeCount + 1);
+        assertEquals(fixtureId, fixturesHsCodes.stream().filter(item -> item.getHsCodeId().equals(hsCode.getHsCodeId())).findFirst().get().getRootBlId());
     }
 
     @Test
     @DisplayName("B/L 내부의 Manifest가 저장된다")
     void testSaveBlManifest(){
         //given
-
+        BL fixtureForContainerTest = blFixture1;
+        UUID fixtureId = fixtureForContainerTest.getId();
+        Manifest manifest = new Manifest(fixtureId, "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
+        List<Manifest> fixturesManifests = blFixture1.findAllManifests();
+        int hsCodeCount = fixturesManifests.size();
         //when
-
+        blFixture1.addManifest(manifest);
+        seaMainOutputPort.saveBlMain(blFixture1);
         //then
+        assertEquals(fixturesManifests.size(), hsCodeCount + 1);
+        assertEquals(fixtureId, fixturesManifests.stream().filter(item -> item.getManifestId().equals(manifest.getManifestId())).findFirst().get().getRootBlId());
     }
 }
