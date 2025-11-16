@@ -174,16 +174,16 @@ class SeaMainInputPortTest {
      * TODO [3] 삭제
      * 1. 저장된 B/L 메인이 삭제 된다.
      *   1) B/L 메인의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 개 만큼의 데이터가 존재하는지 확인한다.
+     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
      * 2. 저장된 Container가 삭제 된다.
-     *   1) B/L 메인의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 개 만큼의 데이터가 존재하는지 확인한다.
+     *   1) Container의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
+     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
      * 3. 저장된 HSCode가 삭제 된다.
-     *   1) B/L 메인의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 개 만큼의 데이터가 존재하는지 확인한다.
+     *   1) HSCode의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
+     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
      * 4. 저장된 Manifest가 삭제 된다.
-     *   1) B/L 메인의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 개 만큼의 데이터가 존재하는지 확인한다.
+     *   1) Manifest의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
+     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
      * */
 
     @Test
@@ -308,5 +308,68 @@ class SeaMainInputPortTest {
         List <Manifest> allManifests = blMainById.findAllManifests();
         //then
         assertEquals(allManifests.size(), blFixture2.findAllManifests().size());
+    }
+
+    @Test
+    @DisplayName("B/L 메인이 삭제된다")
+    void testDeleteBlMain () {
+        //given
+        UUID blMainId = blFixture2.getId();
+        //when
+        List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
+        int blMainSizeBeforeDelete = blMainAll.size();
+        seaMainOutputPort.deleteBlMainById(blMainId);
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        //then
+        assertEquals(blMainAll.size(), blMainSizeBeforeDelete - 1);
+        assertNull(blMainById);
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 Container가 삭제된다")
+    void testDeleteBlContainer () {
+        //given
+        UUID blMainId = blFixture1.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <Container> allContainers = blMainById.findAllContainers();
+        int blContainersSizeBeforeDelete = allContainers.size();
+        UUID containerId = allContainers.getFirst().getContainerId();
+        allContainers.removeIf(item -> item.getContainerId().equals(containerId));
+        //then
+        assertEquals(allContainers.size(), blContainersSizeBeforeDelete - 1);
+        assertNull(allContainers.stream().filter(item -> item.getContainerId().equals(containerId)).findFirst().orElse(null));
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 HSCode가 삭제된다")
+    void testDeleteBlHSCode () {
+        //given
+        UUID blMainId = blFixture1.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <HSCode> allHsCodes = blMainById.findAllHsCodes();
+        int blHSCodesSizeBeforeDelete = allHsCodes.size();
+        UUID hsCodeId = allHsCodes.getFirst().getHsCodeId();
+        allHsCodes.removeIf(item -> item.getHsCodeId().equals(hsCodeId));
+        //then
+        assertEquals(allHsCodes.size(), blHSCodesSizeBeforeDelete - 1);
+        assertNull(allHsCodes.stream().filter(item -> item.getHsCodeId().equals(hsCodeId)).findFirst().orElse(null));
+    }
+
+    @Test
+    @DisplayName("B/L 내부의 Manifest가 삭제된다")
+    void testDeleteBlManifest () {
+        //given
+        UUID blMainId = blFixture1.getId();
+        //when
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        List <Manifest> allManifests = blMainById.findAllManifests();
+        int blManifestsSizeBeforeDelete = allManifests.size();
+        UUID manifestId = allManifests.getFirst().getManifestId();
+        allManifests.removeIf(item -> item.getManifestId().equals(manifestId));
+        //then
+        assertEquals(allManifests.size(), blManifestsSizeBeforeDelete - 1);
+        assertNull(allManifests.stream().filter(item -> item.getManifestId().equals(manifestId)).findFirst().orElse(null));
     }
 }

@@ -11,4 +11,5 @@ public interface SeaMainOutputPort {
 
     void saveBlMain(BL bl);
 
+    void deleteBlMainById(UUID blMainId);
 }

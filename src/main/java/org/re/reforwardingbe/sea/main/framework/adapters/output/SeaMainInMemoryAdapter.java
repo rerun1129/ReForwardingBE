@@ -24,4 +24,9 @@ public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
     public void saveBlMain(BL bl) {
         inMemoryBlMainList.add(bl);
     }
+
+    @Override
+    public void deleteBlMainById(UUID blMainId) {
+        inMemoryBlMainList.removeIf(bl -> bl.getId().equals(blMainId));
+    }
 }
