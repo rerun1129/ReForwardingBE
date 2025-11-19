@@ -11,7 +11,6 @@ import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryA
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.re.reforwardingbe.sea.main.domain.model.BLType.ORIGINAL;
@@ -42,9 +41,9 @@ class SeaMainInputPortTest {
     //TODO : B/L 생성 객체들에 한정한 빌더 패턴 작성
     @BeforeEach
     void init(){
-        UUID fixture1Id = UUID.randomUUID();
+        EntityId<BLId> fixture1Id = EntityId.withoutId();
         blFixture1 = new BL(
-                fixture1Id,
+            fixture1Id,
             new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
             new Party(new Shipper("shipperCode1", "shipperName1", "shipperAddress1"),
                       new Consignee("consigneeCode1", "consigneeName1", "consigneeAddress1"),
@@ -85,16 +84,18 @@ class SeaMainInputPortTest {
             new Description(SLC, STC, "SHEEPSKIN GOLF GLOVES"),
             new EDI("ediBlNo1", "ediBlItem1", EXPORT, new SeaPort("transshipmentPortCode1", "transshipmentPortName1")),
             new ArrayList <>(List.of(
-                new Container(fixture1Id, "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, new BigDecimal("550.500"), new BigDecimal("0.550")),
-                new Container(fixture1Id, "ContainerNo1-2", F0FH, "", "", "", "", "", "", 50, CB, new BigDecimal("1000.000"), new BigDecimal("1.000"))
-                                    )),
-            new ArrayList <>(List.of(new HSCode(fixture1Id, "010100", "horse", true), new HSCode(fixture1Id, "420100", "horse saddle", false))),
-            new ArrayList <>(List.of(new Manifest(fixture1Id, "ManifestNo1-1", 50, CB, new BigDecimal("550.500")), new Manifest(fixture1Id, "ManifestNo1-2", 50, CB, new BigDecimal("1000.000"))))
+                new Container(fixture1Id, EntityId.withoutId(), "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, new BigDecimal("550.500"), new BigDecimal("0.550")),
+                new Container(fixture1Id, EntityId.withoutId(), "ContainerNo1-2", F0FH, "", "", "", "", "", "", 50, CB, new BigDecimal("1000.000"), new BigDecimal("1.000"))
+            )),
+            new ArrayList <>(List.of(new HSCode(fixture1Id, EntityId.withoutId(), "010100", "horse", true),
+                                     new HSCode(fixture1Id, EntityId.withoutId(), "420100", "horse saddle", false))),
+            new ArrayList <>(List.of(new Manifest(fixture1Id, EntityId.withoutId(), "ManifestNo1-1", 50, CB, new BigDecimal("550.500")),
+                                     new Manifest(fixture1Id, EntityId.withoutId(), "ManifestNo1-2", 50, CB, new BigDecimal("1000.000"))))
         );
 
-        UUID fixture2Id = UUID.randomUUID();
+        EntityId<BLId> fixture2Id = EntityId.withoutId();
         blFixture2 = new BL(
-                fixture2Id,
+            fixture2Id,
             new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
             new Party(new Shipper("shipperCode2", "shipperName2", "shipperAddress2"),
                       new Consignee("consigneeCode2", "consigneeName2", "consigneeAddress2"),
@@ -129,11 +130,13 @@ class SeaMainInputPortTest {
             new Description(SLC, STC, "9 CARTONS = 2,100 PIECES OF"),
             new EDI("ediBlNo2", "ediBlItem2", IMPORT, new SeaPort("transshipmentPortCode2", "transshipmentPortName2")),
             new ArrayList <>(List.of(
-                new Container(fixture2Id, "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, new BigDecimal("1000.000"), new BigDecimal("0.800")),
-                new Container(fixture2Id, "ContainerNo2-2", T0FR, "", "", "", "", "", "", 60, CB, new BigDecimal("1700.000"), new BigDecimal("1.000"))
+                new Container(fixture2Id, EntityId.withoutId(), "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, new BigDecimal("1000.000"), new BigDecimal("0.800")),
+                new Container(fixture2Id, EntityId.withoutId(), "ContainerNo2-2", T0FR, "", "", "", "", "", "", 60, CB, new BigDecimal("1700.000"), new BigDecimal("1.000"))
             )),
-            new ArrayList <>(List.of(new HSCode(fixture2Id, "870380", "Battery Electric Vehicle", true), new HSCode(fixture2Id, "850760", "Lithium-ion Battery", false))),
-            new ArrayList <>(List.of(new Manifest(fixture2Id, "ManifestNo2-1", 40, CB, new BigDecimal("1000.000")), new Manifest(fixture2Id, "ManifestNo2-2", 60, CB, new BigDecimal("1700.000"))))
+            new ArrayList <>(List.of(new HSCode(fixture2Id, EntityId.withoutId(), "870380", "Battery Electric Vehicle", true),
+                                     new HSCode(fixture2Id, EntityId.withoutId(), "850760", "Lithium-ion Battery", false))),
+            new ArrayList <>(List.of(new Manifest(fixture2Id, EntityId.withoutId(), "ManifestNo2-1", 40, CB, new BigDecimal("1000.000")),
+                                     new Manifest(fixture2Id, EntityId.withoutId(), "ManifestNo2-2", 60, CB, new BigDecimal("1700.000"))))
         );
         seaMainOutputPort.saveBlMain(blFixture1);
         seaMainOutputPort.saveBlMain(blFixture2);
@@ -143,20 +146,20 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 메인이 조회된다")
     void testFindBlMain() {
         //given
-        UUID searchRootId = blFixture1.getId();
+        EntityId<BLId> searchId = blFixture1.getId();
         //when
-        BL searchedBlMain = seaMainOutputPort.findBlMainById(searchRootId);
+        BL searchedBlMain = seaMainOutputPort.findBlMainById(searchId);
         //then
-        assertEquals(searchRootId, searchedBlMain.getId());
+        assertEquals(searchId, searchedBlMain.getId());
     }
 
     @Test
     @DisplayName("B/L 내부의 Container가 조회된다")
     void testFindBlContainer() {
         //given
-        UUID rootBlId = blFixture2.getId();
+        EntityId<BLId> rootBlId = blFixture2.getId();
         List <Container> allContainer = blFixture2.findAllContainers();
-        UUID containerId = allContainer.getFirst().getContainerId();
+        EntityId <Container> containerId = allContainer.getFirst().getContainerId();
         //when
         Container searchedContainer = blFixture2.findContainerById(containerId);
         //then
@@ -167,9 +170,9 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 내부의 HSCode가 조회된다")
     void testFindBlHSCode() {
         //given
-        UUID rootBlId = blFixture2.getId();
+        EntityId<BLId> rootBlId = blFixture2.getId();
         List <HSCode> allHsCode = blFixture2.findAllHsCodes();
-        UUID hsCodeId = allHsCode.getFirst().getHsCodeId();
+        EntityId <HSCode> hsCodeId = allHsCode.getFirst().getHsCodeId();
         //when
         HSCode searchedHsCode = blFixture2.findHSCodeById(hsCodeId);
         //then
@@ -180,9 +183,9 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 내부의 Manifest가 조회된다")
     void testFindBlManifest() {
         //given
-        UUID rootBlId = blFixture2.getId();
+        EntityId<BLId> rootBlId = blFixture2.getId();
         List <Manifest> allManifest = blFixture2.findAllManifests();
-        UUID manifestId = allManifest.getFirst().getManifestId();
+        EntityId <Manifest> manifestId = allManifest.getFirst().getManifestId();
         //when
         Manifest searchedManifest = blFixture2.findManifestById(manifestId);
         //then
@@ -193,7 +196,7 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 메인이 저장된다")
     void testSaveBlMain(){
         //given
-        UUID toAddBlId = UUID.randomUUID();
+        EntityId<BLId> toAddBlId = EntityId.withoutId();
         BL blInputEssentialField = new BL(toAddBlId,
                                           new Header(HOUSE, "HouseNumberGiven1", FCL, ORIGINAL),
                                           new Performance(new Customer("CustomerCodeGiven1", "CustomerNameGiven1"), new Partner("PartnerCodeGiven1", "PartnerNameGiven1", "PartnerAddressGiven1"),
@@ -219,9 +222,9 @@ class SeaMainInputPortTest {
     @DisplayName("기존에 B/L이 존재한다면 Insert가 아닌 Update가 된다[JPA이외 환경 테스트]")
     void testUpdateBlBySaveObject(){
         //given
-        UUID fixtureId = blFixture1.getId();
+        EntityId<BLId> fixtureId = blFixture1.getId();
         //when
-        blFixture1.addContainer(new Container(fixtureId, "ContainerNumberGiven1", F0FH));
+        blFixture1.addContainer(new Container(fixtureId, EntityId.withoutId(), "ContainerNumberGiven1", F0FH));
         List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
         int saveMainBeforeSize = blMainAll.size();
         seaMainOutputPort.saveBlMain(blFixture1);
@@ -235,11 +238,11 @@ class SeaMainInputPortTest {
         //given
         List <Container> allContainers = blFixture1.findAllContainers();
         int beforeAddContainersSize = allContainers.size();
-        Container container = new Container(blFixture1.getId(), "ContainerNumberGiven1", F0FH);
+        Container container = new Container(blFixture1.getId(), EntityId.withoutId(), "ContainerNumberGiven1", F0FH);
         //when
         blFixture1.addContainer(container);
         int addedContainersSize = allContainers.size();
-        UUID addedContainerRootId = blFixture1.findContainerById(container.getContainerId()).getRootBlId();
+        EntityId<BLId> addedContainerRootId = blFixture1.findContainerById(container.getContainerId()).getRootBlId();
         //then
         assertEquals(addedContainersSize, beforeAddContainersSize + 1);
         assertEquals(blFixture1.getId(), addedContainerRootId);
@@ -251,11 +254,11 @@ class SeaMainInputPortTest {
         //given
         List <HSCode> allHSCode = blFixture1.findAllHsCodes();
         int beforeAddHSCodeSize = allHSCode.size();
-        HSCode hsCode = new HSCode(blFixture1.getId(), "HSCodeGiven1", "Description", false);
+        HSCode hsCode = new HSCode(blFixture1.getId(), EntityId.withoutId(), "HSCodeGiven1", "Description", false);
         //when
         blFixture1.addHsCode(hsCode);
         int addedHSCodesSize = allHSCode.size();
-        UUID addedHsCodeRootId = blFixture1.findHSCodeById(hsCode.getHsCodeId()).getRootBlId();
+        EntityId<BLId> addedHsCodeRootId = blFixture1.findHSCodeById(hsCode.getHsCodeId()).getRootBlId();
         //then
         assertEquals(addedHSCodesSize, beforeAddHSCodeSize + 1);
         assertEquals(blFixture1.getId(), addedHsCodeRootId);
@@ -267,11 +270,11 @@ class SeaMainInputPortTest {
         //given
         List<Manifest> allManifests = blFixture1.findAllManifests();
         int beforeAddManifestSize = allManifests.size();
-        Manifest manifest = new Manifest(blFixture1.getId(), "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
+        Manifest manifest = new Manifest(blFixture1.getId(), EntityId.withoutId(), "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
         //when
         blFixture1.addManifest(manifest);
         int addedManifestSize = allManifests.size();
-        UUID addedManifestRootId = blFixture1.findManifestById(manifest.getManifestId()).getRootBlId();
+        EntityId<BLId> addedManifestRootId = blFixture1.findManifestById(manifest.getManifestId()).getRootBlId();
         //then
         assertEquals(addedManifestSize, beforeAddManifestSize + 1);
         assertEquals(blFixture1.getId(), addedManifestRootId);
@@ -281,7 +284,7 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 메인이 삭제된다")
     void testDeleteBlMain () {
         //given
-        UUID blMainId = blFixture2.getId();
+        EntityId<BLId> blMainId = blFixture2.getId();
         //when
         List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
         int blMainSizeBeforeDelete = blMainAll.size();
@@ -298,7 +301,7 @@ class SeaMainInputPortTest {
         //given
         List<Container> allContainers = blFixture1.findAllContainers();
         int beforeDeleteContainersSize = allContainers.size();
-        UUID toRemoveContainerId = allContainers.getFirst().getContainerId();
+        EntityId <Container> toRemoveContainerId = allContainers.getFirst().getContainerId();
         //when
         blFixture1.removeContainerById(toRemoveContainerId);
         int deletedContainersSize = allContainers.size();
@@ -314,7 +317,7 @@ class SeaMainInputPortTest {
         //given
         List<HSCode> allHsCode = blFixture1.findAllHsCodes();
         int beforeDeleteHsCodesSize = allHsCode.size();
-        UUID toDeleteHsCodeId = allHsCode.getFirst().getHsCodeId();
+        EntityId <HSCode> toDeleteHsCodeId = allHsCode.getFirst().getHsCodeId();
         //when
         blFixture1.removeHsCodeById(toDeleteHsCodeId);
         int deletedHsCodesSize = allHsCode.size();
@@ -330,7 +333,7 @@ class SeaMainInputPortTest {
         //given
         List<Manifest> allManifest = blFixture1.findAllManifests();
         int beforeDeleteManifestsSize = allManifest.size();
-        UUID toDeleteManifestId = allManifest.getFirst().getManifestId();
+        EntityId <Manifest> toDeleteManifestId = allManifest.getFirst().getManifestId();
         //when
         blFixture1.removeManifestById(toDeleteManifestId);
         int deletedManifestsSize = allManifest.size();

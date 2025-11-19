@@ -3,13 +3,12 @@ package org.re.reforwardingbe.sea.main.domain.model;
 import lombok.Getter;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
 public class Container {
     @Getter
-    private UUID rootBlId;
+    private EntityId<BLId> rootBlId;
     @Getter
-    private UUID containerId;
+    private EntityId <Container> containerId;
     private String containerNo;
     private ContainerType containerType;
     private String containerSealNumber1;
@@ -24,12 +23,12 @@ public class Container {
     private BigDecimal cbm;
 
     //TODO : 필수 값을 담은 생성자와 모든 값을 담는 생성자를 분리 / 정적 팩토리 메서드로 작성할 수 있는 구조
-    public Container(UUID rootBlId, String containerNo, ContainerType containerType, String containerSealNumber1,
+    public Container(EntityId<BLId> rootBlId, EntityId <Container> containerId, String containerNo, ContainerType containerType, String containerSealNumber1,
                      String containerSealNumber2, String containerSealNumber3, String containerSealNumber4,
                      String containerSealNumber5, String containerSealNumber6, Integer packageQuantity,
                      PackageUnit packageUnit, BigDecimal grossWeight, BigDecimal cbm) {
         this.rootBlId = rootBlId;
-        this.containerId = UUID.randomUUID();
+        this.containerId = containerId;
         this.containerNo = containerNo;
         this.containerType = containerType;
         this.containerSealNumber1 = containerSealNumber1;
@@ -44,28 +43,11 @@ public class Container {
         this.cbm = cbm;
     }
 
-    public Container(UUID rootBlId, String containerNo, ContainerType containerType) {
+    public Container(EntityId<BLId> rootBlId, EntityId <Container> containerId, String containerNo, ContainerType containerType) {
         this.rootBlId = rootBlId;
-        this.containerId = UUID.randomUUID();
+        this.containerId = containerId;
         this.containerNo = containerNo;
         this.containerType = containerType;
-    }
-
-    public Container(Container container){
-        this.rootBlId = container.rootBlId;
-        this.containerId = container.containerId;
-        this.containerNo = container.containerNo;
-        this.containerType = container.containerType;
-        this.containerSealNumber1 = container.containerSealNumber1;
-        this.containerSealNumber2 = container.containerSealNumber2;
-        this.containerSealNumber3 = container.containerSealNumber3;
-        this.containerSealNumber4 = container.containerSealNumber4;
-        this.containerSealNumber5 = container.containerSealNumber5;
-        this.containerSealNumber6 = container.containerSealNumber6;
-        this.packageQuantity = container.packageQuantity;
-        this.packageUnit = container.packageUnit;
-        this.grossWeight = container.grossWeight;
-        this.cbm = container.cbm;
     }
 
     public Container() {
