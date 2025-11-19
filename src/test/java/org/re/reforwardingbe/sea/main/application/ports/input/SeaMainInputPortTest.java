@@ -6,6 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
 import org.re.reforwardingbe.sea.main.domain.model.BL;
 import org.re.reforwardingbe.sea.main.domain.model.*;
+import org.re.reforwardingbe.sea.main.domain.specification.ContainerSpec;
+import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
+import org.re.reforwardingbe.sea.main.domain.specification.ManifestSpec;
 import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryAdapter;
 
 import java.math.BigDecimal;
@@ -42,6 +45,65 @@ class SeaMainInputPortTest {
     @BeforeEach
     void init(){
         EntityId<BLId> fixture1Id = EntityId.withoutId();
+        ContainerSpec containerSpec1_1 = ContainerSpec.builder()
+                                                   .rootBlId(fixture1Id)
+                                                   .containerId(EntityId.withoutId())
+                                                   .containerNo("ContainerNo1-1")
+                                                   .containerType(F0FH)
+                                                   .containerSealNumber1("1")
+                                                   .containerSealNumber2("2")
+                                                   .containerSealNumber3("3")
+                                                   .containerSealNumber4("4")
+                                                   .containerSealNumber5("5")
+                                                   .containerSealNumber6("6")
+                                                   .packageQuantity(50)
+                                                   .packageUnit(CB)
+                                                   .grossWeight(BigDecimal.valueOf(550.500))
+                                                   .cbm(BigDecimal.valueOf(0.550))
+                                                   .build();
+        ContainerSpec containerSpec1_2 = ContainerSpec.builder()
+                                                      .rootBlId(fixture1Id)
+                                                      .containerId(EntityId.withoutId())
+                                                      .containerNo("ContainerNo1-2")
+                                                      .containerType(F0FH)
+                                                      .packageQuantity(50)
+                                                      .packageUnit(CB)
+                                                      .grossWeight(BigDecimal.valueOf(1000.000))
+                                                      .cbm(BigDecimal.valueOf(1.000))
+                                                      .build();
+
+        HSCodeSpec hsCodeSpec1_1 = HSCodeSpec.builder()
+                                            .rootBlId(fixture1Id)
+                                            .hsCodeId(EntityId.withoutId())
+                                            .hsCode("010100")
+                                            .hsCodeDescription("horse")
+                                            .isMainItem(true)
+                                            .build();
+
+        HSCodeSpec hsCodeSpec1_2 = HSCodeSpec.builder()
+                                            .rootBlId(fixture1Id)
+                                            .hsCodeId(EntityId.withoutId())
+                                            .hsCode("420100")
+                                            .hsCodeDescription("horse saddle")
+                                            .isMainItem(false)
+                                            .build();
+        ManifestSpec manifestSpec1_1 = ManifestSpec.builder()
+                                                    .rootBlId(fixture1Id)
+                                                    .manifestId(EntityId.withoutId())
+                                                    .manifestNo("ManifestNo1-1")
+                                                    .manifestQuantity(50)
+                                                    .manifestUnit(CB)
+                                                    .manifestWeight(BigDecimal.valueOf(550.500))
+                                                    .build();
+        ManifestSpec manifestSpec1_2 = ManifestSpec.builder()
+                                                    .rootBlId(fixture1Id)
+                                                    .manifestId(EntityId.withoutId())
+                                                    .manifestNo("ManifestNo1-2")
+                                                    .manifestQuantity(50)
+                                                    .manifestUnit(CB)
+                                                    .manifestWeight(BigDecimal.valueOf(1000.000))
+                                                    .build();
+
         blFixture1 = new BL(
             fixture1Id,
             new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
@@ -83,17 +145,72 @@ class SeaMainInputPortTest {
                 """),
             new Description(SLC, STC, "SHEEPSKIN GOLF GLOVES"),
             new EDI("ediBlNo1", "ediBlItem1", EXPORT, new SeaPort("transshipmentPortCode1", "transshipmentPortName1")),
-            new ArrayList <>(List.of(
-                new Container(fixture1Id, EntityId.withoutId(), "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, new BigDecimal("550.500"), new BigDecimal("0.550")),
-                new Container(fixture1Id, EntityId.withoutId(), "ContainerNo1-2", F0FH, "", "", "", "", "", "", 50, CB, new BigDecimal("1000.000"), new BigDecimal("1.000"))
-            )),
-            new ArrayList <>(List.of(new HSCode(fixture1Id, EntityId.withoutId(), "010100", "horse", true),
-                                     new HSCode(fixture1Id, EntityId.withoutId(), "420100", "horse saddle", false))),
-            new ArrayList <>(List.of(new Manifest(fixture1Id, EntityId.withoutId(), "ManifestNo1-1", 50, CB, new BigDecimal("550.500")),
-                                     new Manifest(fixture1Id, EntityId.withoutId(), "ManifestNo1-2", 50, CB, new BigDecimal("1000.000"))))
+            new ArrayList <>(List.of(Container.of(containerSpec1_1), Container.of(containerSpec1_2))),
+            new ArrayList <>(List.of(HSCode.of(hsCodeSpec1_1), HSCode.of(hsCodeSpec1_2))),
+            new ArrayList <>(List.of(Manifest.of(manifestSpec1_1), Manifest.of(manifestSpec1_2)))
         );
 
         EntityId<BLId> fixture2Id = EntityId.withoutId();
+        ContainerSpec containerSpec2_1 = ContainerSpec.builder()
+                                                      .rootBlId(fixture2Id)
+                                                      .containerId(EntityId.withoutId())
+                                                      .containerNo("ContainerNo2-1")
+                                                      .containerType(T0FR)
+                                                      .containerSealNumber1("1")
+                                                      .containerSealNumber2("2")
+                                                      .containerSealNumber3("3")
+                                                      .containerSealNumber4("4")
+                                                      .containerSealNumber5("5")
+                                                      .containerSealNumber6("6")
+                                                      .packageQuantity(40)
+                                                      .packageUnit(CB)
+                                                      .grossWeight(BigDecimal.valueOf(1000.000))
+                                                      .cbm(BigDecimal.valueOf(0.800))
+                                                      .build();
+
+        ContainerSpec containerSpec2_2 = ContainerSpec.builder()
+                                                      .rootBlId(fixture2Id)
+                                                      .containerId(EntityId.withoutId())
+                                                      .containerNo("ContainerNo2-2")
+                                                      .containerType(T0FR)
+                                                      .packageQuantity(60)
+                                                      .packageUnit(CB)
+                                                      .grossWeight(BigDecimal.valueOf(1700.000))
+                                                      .cbm(BigDecimal.valueOf(1.000))
+                                                      .build();
+
+        HSCodeSpec hsCodeSpec2_1 = HSCodeSpec.builder()
+                                             .rootBlId(fixture2Id)
+                                             .hsCodeId(EntityId.withoutId())
+                                             .hsCode("870380")
+                                             .hsCodeDescription("Battery Electric Vehicle")
+                                             .isMainItem(true)
+                                             .build();
+
+        HSCodeSpec hsCodeSpec2_2 = HSCodeSpec.builder()
+                                             .rootBlId(fixture2Id)
+                                             .hsCodeId(EntityId.withoutId())
+                                             .hsCode("850760")
+                                             .hsCodeDescription("Lithium-ion Battery")
+                                             .isMainItem(false)
+                                             .build();
+        ManifestSpec manifestSpec2_1 = ManifestSpec.builder()
+                                                   .rootBlId(fixture2Id)
+                                                   .manifestId(EntityId.withoutId())
+                                                   .manifestNo("ManifestNo2-1")
+                                                   .manifestQuantity(40)
+                                                   .manifestUnit(CB)
+                                                   .manifestWeight(BigDecimal.valueOf(1000.000))
+                                                   .build();
+        ManifestSpec manifestSpec2_2 = ManifestSpec.builder()
+                                                   .rootBlId(fixture2Id)
+                                                   .manifestId(EntityId.withoutId())
+                                                   .manifestNo("ManifestNo2-2")
+                                                   .manifestQuantity(60)
+                                                   .manifestUnit(CB)
+                                                   .manifestWeight(BigDecimal.valueOf(1700.000))
+                                                   .build();
+
         blFixture2 = new BL(
             fixture2Id,
             new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
@@ -129,14 +246,9 @@ class SeaMainInputPortTest {
             new Mark("N/M"),
             new Description(SLC, STC, "9 CARTONS = 2,100 PIECES OF"),
             new EDI("ediBlNo2", "ediBlItem2", IMPORT, new SeaPort("transshipmentPortCode2", "transshipmentPortName2")),
-            new ArrayList <>(List.of(
-                new Container(fixture2Id, EntityId.withoutId(), "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, new BigDecimal("1000.000"), new BigDecimal("0.800")),
-                new Container(fixture2Id, EntityId.withoutId(), "ContainerNo2-2", T0FR, "", "", "", "", "", "", 60, CB, new BigDecimal("1700.000"), new BigDecimal("1.000"))
-            )),
-            new ArrayList <>(List.of(new HSCode(fixture2Id, EntityId.withoutId(), "870380", "Battery Electric Vehicle", true),
-                                     new HSCode(fixture2Id, EntityId.withoutId(), "850760", "Lithium-ion Battery", false))),
-            new ArrayList <>(List.of(new Manifest(fixture2Id, EntityId.withoutId(), "ManifestNo2-1", 40, CB, new BigDecimal("1000.000")),
-                                     new Manifest(fixture2Id, EntityId.withoutId(), "ManifestNo2-2", 60, CB, new BigDecimal("1700.000"))))
+            new ArrayList <>(List.of( Container.of(containerSpec2_1), Container.of(containerSpec2_2))),
+            new ArrayList <>(List.of(HSCode.of(hsCodeSpec2_1), HSCode.of(hsCodeSpec2_2))),
+            new ArrayList <>(List.of(Manifest.of(manifestSpec2_1), Manifest.of(manifestSpec2_2)))
         );
         seaMainOutputPort.saveBlMain(blFixture1);
         seaMainOutputPort.saveBlMain(blFixture2);
@@ -224,7 +336,7 @@ class SeaMainInputPortTest {
         //given
         EntityId<BLId> fixtureId = blFixture1.getId();
         //when
-        blFixture1.addContainer(new Container(fixtureId, EntityId.withoutId(), "ContainerNumberGiven1", F0FH));
+        blFixture1.addContainer(Container.withEssential(fixtureId, EntityId.withoutId(), "ContainerNumberGiven1", F0FH));
         List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
         int saveMainBeforeSize = blMainAll.size();
         seaMainOutputPort.saveBlMain(blFixture1);
@@ -238,7 +350,7 @@ class SeaMainInputPortTest {
         //given
         List <Container> allContainers = blFixture1.findAllContainers();
         int beforeAddContainersSize = allContainers.size();
-        Container container = new Container(blFixture1.getId(), EntityId.withoutId(), "ContainerNumberGiven1", F0FH);
+        Container container = Container.withEssential(blFixture1.getId(), EntityId.withoutId(), "ContainerNumberGiven1", F0FH);
         //when
         blFixture1.addContainer(container);
         int addedContainersSize = allContainers.size();
@@ -254,7 +366,7 @@ class SeaMainInputPortTest {
         //given
         List <HSCode> allHSCode = blFixture1.findAllHsCodes();
         int beforeAddHSCodeSize = allHSCode.size();
-        HSCode hsCode = new HSCode(blFixture1.getId(), EntityId.withoutId(), "HSCodeGiven1", "Description", false);
+        HSCode hsCode = HSCode.withEssential(blFixture1.getId(), EntityId.withoutId(), "HSCodeGiven1");
         //when
         blFixture1.addHsCode(hsCode);
         int addedHSCodesSize = allHSCode.size();
@@ -270,7 +382,7 @@ class SeaMainInputPortTest {
         //given
         List<Manifest> allManifests = blFixture1.findAllManifests();
         int beforeAddManifestSize = allManifests.size();
-        Manifest manifest = new Manifest(blFixture1.getId(), EntityId.withoutId(), "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
+        Manifest manifest = Manifest.withEssential(blFixture1.getId(), EntityId.withoutId(), "ManifestNoGiven1");
         //when
         blFixture1.addManifest(manifest);
         int addedManifestSize = allManifests.size();

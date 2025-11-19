@@ -68,7 +68,7 @@ public class BL {
     }
 
     public Container findContainerById(EntityId <Container> containerId) {
-        return containers.stream().filter(item -> containerId.equals(item.getContainerId())).findFirst().orElse(new Container());
+        return containers.stream().filter(item -> containerId.equals(item.getContainerId())).findFirst().orElse(Container.empty());
     }
 
     public void addContainer(Container container) {
@@ -84,7 +84,7 @@ public class BL {
     }
 
     public HSCode findHSCodeById(EntityId <HSCode> hsCodeId) {
-        return hsCodes.stream().filter(item -> hsCodeId.equals(item.getHsCodeId())).findFirst().orElse(new HSCode());
+        return hsCodes.stream().filter(item -> hsCodeId.equals(item.getHsCodeId())).findFirst().orElse(HSCode.empty());
     }
 
     public void addHsCode(HSCode hsCode) {
@@ -100,7 +100,7 @@ public class BL {
     }
 
     public Manifest findManifestById(EntityId <Manifest> manifestId) {
-        return manifests.stream().filter(item -> manifestId.equals(item.getManifestId())).findFirst().orElse(new Manifest());
+        return manifests.stream().filter(item -> manifestId.equals(item.getManifestId())).findFirst().orElse(Manifest.empty());
     }
 
     public void addManifest(Manifest manifest) {

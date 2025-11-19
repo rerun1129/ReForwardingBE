@@ -1,6 +1,7 @@
 package org.re.reforwardingbe.sea.main.domain.model;
 
 import lombok.Getter;
+import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
 
 public class HSCode {
     @Getter
@@ -11,15 +12,27 @@ public class HSCode {
     private String hsCodeDescription;
     private Boolean isMainItem;
 
-    //TODO : 필수 값을 담은 생성자와 모든 값을 담는 생성자를 분리 / 정적 팩토리 메서드로 작성할 수 있는 구조
-    public HSCode(EntityId<BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode, String hsCodeDescription, Boolean isMainItem) {
-        this.rootBlId = rootBlId;
-        this.hsCodeId = hsCodeId;
-        this.hsCode = hsCode;
-        this.hsCodeDescription = hsCodeDescription;
-        this.isMainItem = isMainItem;
+    private HSCode() {
     }
 
-    public HSCode() {
+    private HSCode(HSCodeSpec spec) {
+        this.rootBlId = spec.getRootBlId();
+        this.hsCodeId = spec.getHsCodeId();
+        this.hsCode = spec.getHsCode();
+        this.hsCodeDescription = spec.getHsCodeDescription();
+        this.isMainItem = spec.getIsMainItem();
+    }
+
+    public static HSCode of(HSCodeSpec spec) {
+        return new HSCode(spec);
+    }
+
+    public static HSCode withEssential(EntityId<BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode) {
+        HSCodeSpec spec = HSCodeSpec.builder().rootBlId(rootBlId).hsCodeId(hsCodeId).hsCode(hsCode).build();
+        return new HSCode(spec);
+    }
+
+    public static HSCode empty() {
+        return new HSCode();
     }
 }

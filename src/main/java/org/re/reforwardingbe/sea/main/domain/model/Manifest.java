@@ -1,6 +1,8 @@
 package org.re.reforwardingbe.sea.main.domain.model;
 
 import lombok.Getter;
+import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
+import org.re.reforwardingbe.sea.main.domain.specification.ManifestSpec;
 
 import java.math.BigDecimal;
 
@@ -14,16 +16,28 @@ public class Manifest {
     private PackageUnit manifestUnit;
     private BigDecimal manifestWeight;
 
-    //TODO : 필수 값을 담은 생성자와 모든 값을 담는 생성자를 분리 / 정적 팩토리 메서드로 작성할 수 있는 구조
-    public Manifest(EntityId<BLId> rootBlId, EntityId <Manifest> manifestId, String manifestNo, Integer manifestQuantity, PackageUnit manifestUnit, BigDecimal manifestWeight) {
-        this.rootBlId = rootBlId;
-        this.manifestId = manifestId;
-        this.manifestNo = manifestNo;
-        this.manifestQuantity = manifestQuantity;
-        this.manifestUnit = manifestUnit;
-        this.manifestWeight = manifestWeight;
+    private Manifest() {
     }
 
-    public Manifest() {
+    private Manifest(ManifestSpec spec) {
+        this.rootBlId = spec.getRootBlId();
+        this.manifestId = spec.getManifestId();
+        this.manifestNo = spec.getManifestNo();
+        this.manifestQuantity = spec.getManifestQuantity();
+        this.manifestUnit = spec.getManifestUnit();
+        this.manifestWeight = spec.getManifestWeight();
+    }
+
+    public static Manifest of(ManifestSpec spec) {
+        return new Manifest(spec);
+    }
+
+    public static Manifest withEssential(EntityId<BLId> rootBlId, EntityId <Manifest> manifestId, String manifestNo) {
+        ManifestSpec spec = ManifestSpec.builder().rootBlId(rootBlId).manifestId(manifestId).manifestNo(manifestNo).build();
+        return new Manifest(spec);
+    }
+
+    public static Manifest empty() {
+        return new Manifest();
     }
 }
