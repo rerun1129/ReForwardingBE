@@ -1,7 +1,7 @@
 package org.re.reforwardingbe.sea.main.framework.adapters.output;
 
 import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
-import org.re.reforwardingbe.sea.main.domain.entity.BL;
+import org.re.reforwardingbe.sea.main.domain.model.BL;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.re.reforwardingbe.sea.main.application.ports.output;
 
-import org.re.reforwardingbe.sea.main.domain.entity.BL;
+import org.re.reforwardingbe.sea.main.domain.model.BL;
 
 import java.util.List;
 import java.util.UUID;

@@ -1,0 +1,75 @@
+package org.re.reforwardingbe.sea.main.domain.model;
+
+import lombok.Getter;
+
+@Getter
+public enum PackageUnit {
+    BA("BARREL"),
+    BC("BOTTLECRATE"),
+    BE("BUNDLE"),
+    BG("BAG"),
+    BJ("BUCKET"),
+    BL("BALE"),
+    BN("BUNDLE"),
+    BR("BAR"),
+    BV("BOTTLE, BULBOUS"),
+    BX("BOX"),
+    CA("CAN"),
+    CB("CARTON BOXES"),
+    CE("CASE"),
+    CH("CHEST"),
+    CJ("COFFIN"),
+    CL("COIL"),
+    CR("CRATE"),
+    CS("CASE"),
+    CT("CARTON"),
+    DM("DRUM"),
+    DR("DRUM"),
+    EC("BAG, PLASTIC"),
+    EE("CASE, WITH PLT BASE WOODEN"),
+    FX("BAG, FLEXIBLECONTAINER"),
+    GT("PACKAGE"),
+    IT("ISO TANK"),
+    IZ("INGOTS"),
+    LT("LOT"),
+    MC("CRATE, MILK"),
+    NT("NET"),
+    PA("PAIL"),
+    PB("PLYWOOD BOX"),
+    PC("PIECE"),
+    PG("PALLET"),
+    PI("PIPE"),
+    PK("PACKAGE"),
+    PL("PALLET"),
+    PT("PALLET"),
+    PU("TRAYPACK"),
+    PY("PLYWOOD CASES"),
+    QP("BOX, WOODEN, NTRL WOOD, ORDINARY"),
+    QQ("BOX, WOODEN, WITHSIFTPROOFWALLS"),
+    RL("REEL"),
+    RO("ROLL"),
+    SD("SKID"),
+    SK("SKELETONCASE"),
+    SS("CASE, STEEL"),
+    ST("SETS"),
+    TE("TE"),
+    TK("TANK"),
+    UN("UNIT"),
+    VG("BULK, GAS"),
+    VL("BULK, LIGUID"),
+    VO("BULK, SOLID, LARGE PARTICLES"),
+    VQ("BULK, GAS"),
+    VR("BULK, SOLID,GRANULAR PARTICLES"),
+    VY("BULK, FINE PARTICLES "),
+    WB("WOODEN BOX"),
+    WC("W/CASE"),
+    WP("WOODEN PALLET"),
+    WR("W/CRATE"),
+    XB("BAG, WOVEN PLASTIC, SIFT PROOF");
+
+    private final String displayName;
+
+    PackageUnit(String displayName) {
+        this.displayName = displayName;
+    }
+}

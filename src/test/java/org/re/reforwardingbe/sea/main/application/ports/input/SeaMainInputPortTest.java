@@ -4,8 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
-import org.re.reforwardingbe.sea.main.domain.entity.BL;
-import org.re.reforwardingbe.sea.main.domain.vo.*;
+import org.re.reforwardingbe.sea.main.domain.model.BL;
+import org.re.reforwardingbe.sea.main.domain.model.*;
 import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryAdapter;
 
 import java.math.BigDecimal;
@@ -14,36 +14,32 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.re.reforwardingbe.sea.main.domain.vo.BLType.ORIGINAL;
-import static org.re.reforwardingbe.sea.main.domain.vo.BLType.SURRENDER;
-import static org.re.reforwardingbe.sea.main.domain.vo.CargoClass.EXPORT;
-import static org.re.reforwardingbe.sea.main.domain.vo.CargoClass.IMPORT;
-import static org.re.reforwardingbe.sea.main.domain.vo.ContainerType.F0FH;
-import static org.re.reforwardingbe.sea.main.domain.vo.ContainerType.T0FR;
-import static org.re.reforwardingbe.sea.main.domain.vo.FreightTerm.COLLECT;
-import static org.re.reforwardingbe.sea.main.domain.vo.FreightTerm.PREPAID;
-import static org.re.reforwardingbe.sea.main.domain.vo.LoadType.FCL;
-import static org.re.reforwardingbe.sea.main.domain.vo.LoadType.LCL;
-import static org.re.reforwardingbe.sea.main.domain.vo.PackageUnit.*;
-import static org.re.reforwardingbe.sea.main.domain.vo.ServiceTerm.CFS_TO_CY;
-import static org.re.reforwardingbe.sea.main.domain.vo.ServiceTerm.CY_TO_CFS;
-import static org.re.reforwardingbe.sea.main.domain.vo.ShipmentType.DIRECT;
-import static org.re.reforwardingbe.sea.main.domain.vo.ShipmentType.HOUSE;
-import static org.re.reforwardingbe.sea.main.domain.vo.UnknownClause1.*;
-import static org.re.reforwardingbe.sea.main.domain.vo.UnknownClause2.*;
+import static org.re.reforwardingbe.sea.main.domain.model.BLType.ORIGINAL;
+import static org.re.reforwardingbe.sea.main.domain.model.BLType.SURRENDER;
+import static org.re.reforwardingbe.sea.main.domain.model.CargoClass.EXPORT;
+import static org.re.reforwardingbe.sea.main.domain.model.CargoClass.IMPORT;
+import static org.re.reforwardingbe.sea.main.domain.model.ContainerType.F0FH;
+import static org.re.reforwardingbe.sea.main.domain.model.ContainerType.T0FR;
+import static org.re.reforwardingbe.sea.main.domain.model.FreightTerm.COLLECT;
+import static org.re.reforwardingbe.sea.main.domain.model.FreightTerm.PREPAID;
+import static org.re.reforwardingbe.sea.main.domain.model.LoadType.FCL;
+import static org.re.reforwardingbe.sea.main.domain.model.LoadType.LCL;
+import static org.re.reforwardingbe.sea.main.domain.model.PackageUnit.*;
+import static org.re.reforwardingbe.sea.main.domain.model.ServiceTerm.CFS_TO_CY;
+import static org.re.reforwardingbe.sea.main.domain.model.ServiceTerm.CY_TO_CFS;
+import static org.re.reforwardingbe.sea.main.domain.model.ShipmentType.DIRECT;
+import static org.re.reforwardingbe.sea.main.domain.model.ShipmentType.HOUSE;
+import static org.re.reforwardingbe.sea.main.domain.model.UnknownClause1.*;
+import static org.re.reforwardingbe.sea.main.domain.model.UnknownClause2.*;
 
 class SeaMainInputPortTest {
     private final SeaMainOutputPort seaMainOutputPort = new SeaMainInMemoryAdapter();
 
-    /*
-    * TODO [0] 픽스쳐
-    * 1. 초기 데이터 세팅은 테스트 클래스의 @BeforeEach에서 진행한다.
-    * 2. 픽스쳐는 2개 이상의 데이터를 리포지토리에 기본적으로 담는다.
-    * 3. B/L 엔티티 픽스쳐 내부에는 B/L 메인과 1대1 대응하는 VO와 1대N으로 대응하는 VO가 있다.
-    * */
     private BL blFixture1;
     private BL blFixture2;
 
+    //TODO : 픽스쳐를 생성해주는 메서드를 테스트 모듈에 작성 / B/L의 요청 값을 처리하는 Request DTO를 도메인 레이어에 작성하여 코드 줄이기
+    //TODO : B/L 생성 객체들에 한정한 빌더 패턴 작성
     @BeforeEach
     void init(){
         UUID fixture1Id = UUID.randomUUID();
@@ -143,102 +139,62 @@ class SeaMainInputPortTest {
         seaMainOutputPort.saveBlMain(blFixture2);
     }
 
-
-    /*
-    * TODO [1] 저장
-    * 1. B/L 메인이 저장된다.
-    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 + 1개 만큼 존재하는지 확인한다.
-    *   2) 저장 후 자신의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
-    * 2. B/L 내부의 Container가 저장된다.
-    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Container 데이터 + 1개 만큼 존재하는지 확인한다.
-    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
-    * 3. B/L 내부의 HSCode가 저장된다.
-    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 HSCode 데이터 + 1개 만큼 존재하는지 확인한다.
-    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
-    * 4. B/L 내부의 Manifest가 저장된다.
-    *   1) 저장 후 리포지토리에 데이터가 픽스쳐 내부 Manifest 데이터 + 1개 만큼 존재하는지 확인한다.
-    *   2) 저장 후 루트 어그리게잇의 식별자와 방금 저장한 객체의 식별자가 같은지 확인한다.
-    * */
-    /*
-     * TODO [2] 조회
-     * 1. 저장된 B/L 메인이 조회된다.
-     *   1) B/L 메인의 존재 여부는 해당 B/L 메인의 ID로 리포지토리를 검색하여 확인한다.(모든 엔티티의 구조를 탐색할 필요가 없음)
-     * 2. 저장된 Container가 조회된다.
-     *   1) Container의 존재 여부는 해당 B/L 메인의 ID로 모든 Container를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
-     * 3. 저장된 HSCode가 조회된다.
-     *   1) HSCode의 존재 여부는 해당 B/L 메인의 ID로 모든 HSCode를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
-     * 4. 저장된 Manifest가 조회된다.
-     *   1) Manifest의 존재 여부는 해당 B/L 메인의 ID로 모든 Manifest를 리포지토리에서 검색하여 픽스처의 개수와 조회된 객체들의 개수를 비교하여 확인한다.
-     */
-    /*
-     * TODO [3] 삭제
-     * 1. 저장된 B/L 메인이 삭제 된다.
-     *   1) B/L 메인의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
-     * 2. 저장된 Container가 삭제 된다.
-     *   1) Container의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
-     * 3. 저장된 HSCode가 삭제 된다.
-     *   1) HSCode의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
-     * 4. 저장된 Manifest가 삭제 된다.
-     *   1) Manifest의 삭제 여부는 리포지토리에 해당 ID가 존재하는지 여부이다.
-     *   2) 삭제 후 리포지토리에 픽스쳐 - 1 개 만큼의 데이터가 존재하는지 확인한다.
-     * */
-
     @Test
     @DisplayName("B/L 메인이 조회된다")
     void testFindBlMain() {
         //given
-        UUID blMainId = blFixture1.getId();
+        UUID searchRootId = blFixture1.getId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        BL searchedBlMain = seaMainOutputPort.findBlMainById(searchRootId);
         //then
-        assertEquals(blFixture1.getId(), blMainById.getId());
+        assertEquals(searchRootId, searchedBlMain.getId());
     }
 
     @Test
     @DisplayName("B/L 내부의 Container가 조회된다")
     void testFindBlContainer() {
         //given
-        UUID blMainId = blFixture2.getId();
+        UUID rootBlId = blFixture2.getId();
+        List <Container> allContainer = blFixture2.findAllContainers();
+        UUID containerId = allContainer.getFirst().getContainerId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <Container> allContainers = blMainById.findAllContainers();
+        Container searchedContainer = blFixture2.findContainerById(containerId);
         //then
-        assertEquals(allContainers.size(), blFixture2.findAllContainers().size());
+        assertEquals(rootBlId, searchedContainer.getRootBlId());
     }
 
     @Test
     @DisplayName("B/L 내부의 HSCode가 조회된다")
     void testFindBlHSCode() {
         //given
-        UUID blMainId = blFixture2.getId();
+        UUID rootBlId = blFixture2.getId();
+        List <HSCode> allHsCode = blFixture2.findAllHsCodes();
+        UUID hsCodeId = allHsCode.getFirst().getHsCodeId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <HSCode> allHsCodes = blMainById.findAllHsCodes();
+        HSCode searchedHsCode = blFixture2.findHSCodeById(hsCodeId);
         //then
-        assertEquals(allHsCodes.size(), blFixture2.findAllHsCodes().size());
+        assertEquals(rootBlId, searchedHsCode.getRootBlId());
     }
 
     @Test
     @DisplayName("B/L 내부의 Manifest가 조회된다")
     void testFindBlManifest() {
         //given
-        UUID blMainId = blFixture2.getId();
+        UUID rootBlId = blFixture2.getId();
+        List <Manifest> allManifest = blFixture2.findAllManifests();
+        UUID manifestId = allManifest.getFirst().getManifestId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <Manifest> allManifests = blMainById.findAllManifests();
+        Manifest searchedManifest = blFixture2.findManifestById(manifestId);
         //then
-        assertEquals(allManifests.size(), blFixture2.findAllManifests().size());
+        assertEquals(rootBlId, searchedManifest.getRootBlId());
     }
 
     @Test
     @DisplayName("B/L 메인이 저장된다")
     void testSaveBlMain(){
         //given
-        UUID savedId = UUID.randomUUID();
-        BL blInputEssentialField = new BL(savedId,
+        UUID toAddBlId = UUID.randomUUID();
+        BL blInputEssentialField = new BL(toAddBlId,
                                           new Header(HOUSE, "HouseNumberGiven1", FCL, ORIGINAL),
                                           new Performance(new Customer("CustomerCodeGiven1", "CustomerNameGiven1"), new Partner("PartnerCodeGiven1", "PartnerNameGiven1", "PartnerAddressGiven1"),
                                        new BusinessUser("UserCodeGiven1", "UserNameGiven1"), new BusinessTeam("TeamCodeGiven1", "TeamNameGiven1")
@@ -249,41 +205,23 @@ class SeaMainInputPortTest {
                        )
         );
         List<BL> allBlsBeforeSave = seaMainOutputPort.findBlMainAll();
-        int blsBeforeSaveSize = allBlsBeforeSave.size();
+        int beforeAddedAllBlSize = allBlsBeforeSave.size();
         //when
         seaMainOutputPort.saveBlMain(blInputEssentialField);
         //then
-        BL savedBl = seaMainOutputPort.findBlMainById(savedId);
-        List<BL> allBls = seaMainOutputPort.findBlMainAll();
-        assertEquals(allBls.size(), blsBeforeSaveSize + 1);
-        assertEquals(savedBl.getId(), savedId);
+        BL addedBl = seaMainOutputPort.findBlMainById(toAddBlId);
+        List<BL> addedAllBl = seaMainOutputPort.findBlMainAll();
+        assertEquals(addedAllBl.size(), beforeAddedAllBlSize + 1);
+        assertEquals(addedBl.getId(), toAddBlId);
     }
 
     @Test
-    @DisplayName("B/L 내부의 Container가 저장된다")
-    void testSaveBlContainer(){
-        //given
-        BL fixtureForContainerTest = blFixture1;
-        UUID fixtureId = fixtureForContainerTest.getId();
-        Container container = new Container(fixtureId, "ContainerNumberGiven1", F0FH);
-        List<Container> fixturesContainers = blFixture1.findAllContainers();
-        int containerCount = fixturesContainers.size();
-        //when
-        blFixture1.addContainer(container);
-        //then
-        assertEquals(fixturesContainers.size(), containerCount + 1);
-        assertEquals(fixtureId, fixturesContainers.stream().filter(item -> item.getContainerId().equals(container.getContainerId())).findFirst().get().getRootBlId());
-    }
-
-    @Test
-    @DisplayName("B/L 내부의 임의 객체 저장 후 B/L 메인이 Insert가 아닌 Update가 된다[저장 환경 독립적 테스트]")
+    @DisplayName("기존에 B/L이 존재한다면 Insert가 아닌 Update가 된다[JPA이외 환경 테스트]")
     void testUpdateBlBySaveObject(){
         //given
-        BL fixtureForContainerTest = blFixture1;
-        UUID fixtureId = fixtureForContainerTest.getId();
-        Container container = new Container(fixtureId, "ContainerNumberGiven1", F0FH);
+        UUID fixtureId = blFixture1.getId();
         //when
-        blFixture1.addContainer(container);
+        blFixture1.addContainer(new Container(fixtureId, "ContainerNumberGiven1", F0FH));
         List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
         int saveMainBeforeSize = blMainAll.size();
         seaMainOutputPort.saveBlMain(blFixture1);
@@ -291,37 +229,52 @@ class SeaMainInputPortTest {
         assertEquals(blMainAll.size(), saveMainBeforeSize);
     }
 
+    @Test
+    @DisplayName("B/L 내부의 Container가 저장된다")
+    void testSaveBlContainer(){
+        //given
+        List <Container> allContainers = blFixture1.findAllContainers();
+        int beforeAddContainersSize = allContainers.size();
+        Container container = new Container(blFixture1.getId(), "ContainerNumberGiven1", F0FH);
+        //when
+        blFixture1.addContainer(container);
+        int addedContainersSize = allContainers.size();
+        UUID addedContainerRootId = blFixture1.findContainerById(container.getContainerId()).getRootBlId();
+        //then
+        assertEquals(addedContainersSize, beforeAddContainersSize + 1);
+        assertEquals(blFixture1.getId(), addedContainerRootId);
+    }
 
     @Test
     @DisplayName("B/L 내부의 HSCode가 저장된다")
     void testSaveBlHSCode(){
         //given
-        BL fixtureForContainerTest = blFixture1;
-        UUID fixtureId = fixtureForContainerTest.getId();
-        HSCode hsCode = new HSCode(fixtureId, "HSCodeGiven1", "Description", false);
-        List<HSCode> fixturesHsCodes = blFixture1.findAllHsCodes();
-        int hsCodeCount = fixturesHsCodes.size();
+        List <HSCode> allHSCode = blFixture1.findAllHsCodes();
+        int beforeAddHSCodeSize = allHSCode.size();
+        HSCode hsCode = new HSCode(blFixture1.getId(), "HSCodeGiven1", "Description", false);
         //when
         blFixture1.addHsCode(hsCode);
+        int addedHSCodesSize = allHSCode.size();
+        UUID addedHsCodeRootId = blFixture1.findHSCodeById(hsCode.getHsCodeId()).getRootBlId();
         //then
-        assertEquals(fixturesHsCodes.size(), hsCodeCount + 1);
-        assertEquals(fixtureId, fixturesHsCodes.stream().filter(item -> item.getHsCodeId().equals(hsCode.getHsCodeId())).findFirst().get().getRootBlId());
+        assertEquals(addedHSCodesSize, beforeAddHSCodeSize + 1);
+        assertEquals(blFixture1.getId(), addedHsCodeRootId);
     }
 
     @Test
     @DisplayName("B/L 내부의 Manifest가 저장된다")
     void testSaveBlManifest(){
         //given
-        BL fixtureForContainerTest = blFixture1;
-        UUID fixtureId = fixtureForContainerTest.getId();
-        Manifest manifest = new Manifest(fixtureId, "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
-        List<Manifest> fixturesManifests = blFixture1.findAllManifests();
-        int hsCodeCount = fixturesManifests.size();
+        List<Manifest> allManifests = blFixture1.findAllManifests();
+        int beforeAddManifestSize = allManifests.size();
+        Manifest manifest = new Manifest(blFixture1.getId(), "ManifestNoGiven1", 50, CB, new BigDecimal("550.500"));
         //when
         blFixture1.addManifest(manifest);
+        int addedManifestSize = allManifests.size();
+        UUID addedManifestRootId = blFixture1.findManifestById(manifest.getManifestId()).getRootBlId();
         //then
-        assertEquals(fixturesManifests.size(), hsCodeCount + 1);
-        assertEquals(fixtureId, fixturesManifests.stream().filter(item -> item.getManifestId().equals(manifest.getManifestId())).findFirst().get().getRootBlId());
+        assertEquals(addedManifestSize, beforeAddManifestSize + 1);
+        assertEquals(blFixture1.getId(), addedManifestRootId);
     }
 
     @Test
@@ -343,47 +296,47 @@ class SeaMainInputPortTest {
     @DisplayName("B/L 내부의 Container가 삭제된다")
     void testDeleteBlContainer () {
         //given
-        UUID blMainId = blFixture1.getId();
+        List<Container> allContainers = blFixture1.findAllContainers();
+        int beforeDeleteContainersSize = allContainers.size();
+        UUID toRemoveContainerId = allContainers.getFirst().getContainerId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <Container> allContainers = blMainById.findAllContainers();
-        int blContainersSizeBeforeDelete = allContainers.size();
-        UUID containerId = allContainers.getFirst().getContainerId();
-        allContainers.removeIf(item -> item.getContainerId().equals(containerId));
+        blFixture1.removeContainerById(toRemoveContainerId);
+        int deletedContainersSize = allContainers.size();
+        Container deletedContainer = blFixture1.findContainerById(toRemoveContainerId);
         //then
-        assertEquals(allContainers.size(), blContainersSizeBeforeDelete - 1);
-        assertNull(allContainers.stream().filter(item -> item.getContainerId().equals(containerId)).findFirst().orElse(null));
+        assertEquals(deletedContainersSize, beforeDeleteContainersSize - 1);
+        assertNull(deletedContainer.getContainerId());
     }
 
     @Test
     @DisplayName("B/L 내부의 HSCode가 삭제된다")
     void testDeleteBlHSCode () {
         //given
-        UUID blMainId = blFixture1.getId();
+        List<HSCode> allHsCode = blFixture1.findAllHsCodes();
+        int beforeDeleteHsCodesSize = allHsCode.size();
+        UUID toDeleteHsCodeId = allHsCode.getFirst().getHsCodeId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <HSCode> allHsCodes = blMainById.findAllHsCodes();
-        int blHSCodesSizeBeforeDelete = allHsCodes.size();
-        UUID hsCodeId = allHsCodes.getFirst().getHsCodeId();
-        allHsCodes.removeIf(item -> item.getHsCodeId().equals(hsCodeId));
+        blFixture1.removeHsCodeById(toDeleteHsCodeId);
+        int deletedHsCodesSize = allHsCode.size();
+        HSCode deletedHsCode = blFixture1.findHSCodeById(toDeleteHsCodeId);
         //then
-        assertEquals(allHsCodes.size(), blHSCodesSizeBeforeDelete - 1);
-        assertNull(allHsCodes.stream().filter(item -> item.getHsCodeId().equals(hsCodeId)).findFirst().orElse(null));
+        assertEquals(deletedHsCodesSize, beforeDeleteHsCodesSize - 1);
+        assertNull(deletedHsCode.getHsCodeId());
     }
 
     @Test
     @DisplayName("B/L 내부의 Manifest가 삭제된다")
     void testDeleteBlManifest () {
         //given
-        UUID blMainId = blFixture1.getId();
+        List<Manifest> allManifest = blFixture1.findAllManifests();
+        int beforeDeleteManifestsSize = allManifest.size();
+        UUID toDeleteManifestId = allManifest.getFirst().getManifestId();
         //when
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
-        List <Manifest> allManifests = blMainById.findAllManifests();
-        int blManifestsSizeBeforeDelete = allManifests.size();
-        UUID manifestId = allManifests.getFirst().getManifestId();
-        allManifests.removeIf(item -> item.getManifestId().equals(manifestId));
+        blFixture1.removeManifestById(toDeleteManifestId);
+        int deletedManifestsSize = allManifest.size();
+        Manifest deletedManifest = blFixture1.findManifestById(toDeleteManifestId);
         //then
-        assertEquals(allManifests.size(), blManifestsSizeBeforeDelete - 1);
-        assertNull(allManifests.stream().filter(item -> item.getManifestId().equals(manifestId)).findFirst().orElse(null));
+        assertEquals(deletedManifestsSize, beforeDeleteManifestsSize - 1);
+        assertNull(deletedManifest.getManifestId());
     }
 }
