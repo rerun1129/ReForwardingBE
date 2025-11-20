@@ -50,6 +50,8 @@ public class BL {
         return new BL(new BLSpec(id, header, performance, schedule));
     }
 
+    public static BL empty() {return new BL();}
+
     public List<Container> findAllContainers() {
         return containers;
     }

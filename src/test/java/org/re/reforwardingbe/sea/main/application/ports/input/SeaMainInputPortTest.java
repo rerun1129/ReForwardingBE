@@ -10,6 +10,7 @@ import org.re.reforwardingbe.sea.main.fixture.BLFixture;
 import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryAdapter;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.re.reforwardingbe.sea.main.domain.model.BLType.ORIGINAL;
@@ -35,7 +36,7 @@ class SeaMainInputPortTest {
         //given
         EntityId<BLId> searchId = blFixture1.getId();
         //when
-        BL searchedBlMain = seaMainOutputPort.findBlMainById(searchId);
+        BL searchedBlMain = seaMainOutputPort.findBlMainById(searchId).orElse(BL.empty());
         //then
         assertEquals(searchId, searchedBlMain.getId());
     }
@@ -99,7 +100,7 @@ class SeaMainInputPortTest {
         //when
         seaMainOutputPort.saveBlMain(blInputEssentialField);
         //then
-        BL addedBl = seaMainOutputPort.findBlMainById(toAddBlId);
+        BL addedBl = seaMainOutputPort.findBlMainById(toAddBlId).orElse(BL.empty());
         List<BL> addedAllBl = seaMainOutputPort.findBlMainAll();
         assertEquals(addedAllBl.size(), beforeAddedAllBlSize + 1);
         assertEquals(addedBl.getId(), toAddBlId);
@@ -176,10 +177,10 @@ class SeaMainInputPortTest {
         List <BL> blMainAll = seaMainOutputPort.findBlMainAll();
         int blMainSizeBeforeDelete = blMainAll.size();
         seaMainOutputPort.deleteBlMainById(blMainId);
-        BL blMainById = seaMainOutputPort.findBlMainById(blMainId);
+        BL blMainById = seaMainOutputPort.findBlMainById(blMainId).orElse(BL.empty());
         //then
         assertEquals(blMainAll.size(), blMainSizeBeforeDelete - 1);
-        assertNull(blMainById);
+        assertNull(blMainById.getId());
     }
 
     @Test

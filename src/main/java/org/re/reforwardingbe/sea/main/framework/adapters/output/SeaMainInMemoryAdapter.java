@@ -7,14 +7,15 @@ import org.re.reforwardingbe.sea.main.domain.model.EntityId;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
     List<BL> inMemoryBlMainList = new ArrayList<>();
 
     @Override
-    public BL findBlMainById(EntityId <BLId> id) {
-        return inMemoryBlMainList.stream().filter(bl -> bl.getId().equals(id)).findFirst().orElse(null);
+    public Optional <BL> findBlMainById(EntityId <BLId> id) {
+        return inMemoryBlMainList.stream().filter(bl -> bl.getId().equals(id)).findFirst();
     }
 
     @Override
