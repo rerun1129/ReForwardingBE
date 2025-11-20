@@ -7,9 +7,9 @@ import java.math.BigDecimal;
 
 public class Container {
     @Getter
-    private EntityId<BLId> rootBlId;
+    private BLId rootBlId;
     @Getter
-    private EntityId<Container> containerId;
+    private ContainerId containerId;
     private String containerNo;
     private ContainerType containerType;
     private String containerSealNumber1;
@@ -48,7 +48,7 @@ public class Container {
         return new Container(spec);
     }
 
-    public static Container withEssential(EntityId<BLId> rootBlId, EntityId <Container> containerId, String containerNo, ContainerType containerType) {
+    public static Container withEssential(BLId rootBlId, ContainerId containerId, String containerNo, ContainerType containerType) {
         return new Container(new ContainerSpec(rootBlId, containerId, containerNo, containerType));
     }
 

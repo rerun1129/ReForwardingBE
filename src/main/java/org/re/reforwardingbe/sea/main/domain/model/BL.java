@@ -7,7 +7,7 @@ import java.util.List;
 
 public class BL {
     @Getter
-    private EntityId<BLId> id;
+    private BLId id;
     private Header header;
     private Party party;
     private Schedule schedule;
@@ -46,7 +46,7 @@ public class BL {
         return new BL(spec);
     }
 
-    public static BL withEssential(EntityId<BLId> id, Header header, Performance performance, Schedule schedule) {
+    public static BL withEssential(BLId id, Header header, Performance performance, Schedule schedule) {
         return new BL(new BLSpec(id, header, performance, schedule));
     }
 
@@ -56,7 +56,7 @@ public class BL {
         return containers;
     }
 
-    public Container findContainerById(EntityId <Container> containerId) {
+    public Container findContainerById(ContainerId containerId) {
         return containers.stream().filter(item -> containerId.equals(item.getContainerId())).findFirst().orElse(Container.empty());
     }
 
@@ -64,7 +64,7 @@ public class BL {
         containers.add(container);
     }
 
-    public void removeContainerById(EntityId <Container> containerId) {
+    public void removeContainerById(ContainerId containerId) {
         containers.removeIf(item -> item.getContainerId().equals(containerId));
     }
 
@@ -72,7 +72,7 @@ public class BL {
         return hsCodes;
     }
 
-    public HSCode findHSCodeById(EntityId <HSCode> hsCodeId) {
+    public HSCode findHSCodeById(HSCodeId hsCodeId) {
         return hsCodes.stream().filter(item -> hsCodeId.equals(item.getHsCodeId())).findFirst().orElse(HSCode.empty());
     }
 
@@ -80,7 +80,7 @@ public class BL {
         hsCodes.add(hsCode);
     }
 
-    public void removeHsCodeById(EntityId <HSCode> hsCodeId) {
+    public void removeHsCodeById(HSCodeId hsCodeId) {
         hsCodes.removeIf(item -> item.getHsCodeId().equals(hsCodeId));
     }
 
@@ -88,7 +88,7 @@ public class BL {
         return manifests;
     }
 
-    public Manifest findManifestById(EntityId <Manifest> manifestId) {
+    public Manifest findManifestById(ManifestId manifestId) {
         return manifests.stream().filter(item -> manifestId.equals(item.getManifestId())).findFirst().orElse(Manifest.empty());
     }
 
@@ -96,7 +96,7 @@ public class BL {
         manifests.add(manifest);
     }
 
-    public void removeManifestById(EntityId <Manifest> manifestId) {
+    public void removeManifestById(ManifestId manifestId) {
         manifests.removeIf(item -> item.getManifestId().equals(manifestId));
     }
 }

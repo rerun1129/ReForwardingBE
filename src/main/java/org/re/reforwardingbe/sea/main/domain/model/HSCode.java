@@ -5,9 +5,9 @@ import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
 
 public class HSCode {
     @Getter
-    private EntityId<BLId> rootBlId;
+    private BLId rootBlId;
     @Getter
-    private EntityId <HSCode> hsCodeId;
+    private HSCodeId hsCodeId;
     private String hsCode;
     private String hsCodeDescription;
     private Boolean isMainItem;
@@ -27,7 +27,7 @@ public class HSCode {
         return new HSCode(spec);
     }
 
-    public static HSCode withEssential(EntityId<BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode) {
+    public static HSCode withEssential(BLId rootBlId, HSCodeId hsCodeId, String hsCode) {
         return new HSCode(new HSCodeSpec(rootBlId, hsCodeId, hsCode));
     }
 

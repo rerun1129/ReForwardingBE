@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 
 public class Manifest {
     @Getter
-    private EntityId<BLId> rootBlId;
+    private BLId rootBlId;
     @Getter
-    private EntityId <Manifest> manifestId;
+    private ManifestId manifestId;
     private String manifestNo;
     private Integer manifestQuantity;
     private PackageUnit manifestUnit;
@@ -32,7 +32,7 @@ public class Manifest {
         return new Manifest(spec);
     }
 
-    public static Manifest withEssential(EntityId<BLId> rootBlId, EntityId <Manifest> manifestId, String manifestNo) {
+    public static Manifest withEssential(BLId rootBlId, ManifestId manifestId, String manifestNo) {
         return new Manifest(new ManifestSpec(rootBlId, manifestId, manifestNo));
     }
 

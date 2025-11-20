@@ -8,7 +8,7 @@ import java.util.UUID;
 
 @Getter
 public class BLCreateRequest {
-    private UUID id; //객체 생성 시점에 EntityId<BLId> 타입으로 처리(JSON에서 자바 객체로 변환 과정에서 제네릭 타입으로 인지시키려면 추가적인 어노테이션 필요)
+    private BLId id;
     private Header header;
     private Party party;
     private Schedule schedule;

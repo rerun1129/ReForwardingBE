@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 public class BLSpec {
-    private final EntityId <BLId> id;
+    private final BLId id;
     private final Header header;
     private final Schedule schedule;
     private final Performance performance;
@@ -23,14 +23,14 @@ public class BLSpec {
     private List<HSCode> hsCodes;
     private List<Manifest> manifests;
 
-    public BLSpec(EntityId<BLId> id, Header header, Performance performance, Schedule schedule) {
+    public BLSpec(BLId id, Header header, Performance performance, Schedule schedule) {
         this.id = id;
         this.header = header;
         this.performance = performance;
         this.schedule = schedule;
     }
 
-    public BLSpec(EntityId <BLId> id, Header header, Party party, Schedule schedule,
+    public BLSpec(BLId id, Header header, Party party, Schedule schedule,
                   Issue issue, Cargo cargo, Contract contract, Performance performance,
                   Mark mark, Description description, EDI edi, List <Container> containers,
                   List <HSCode> hsCodes, List <Manifest> manifests) {

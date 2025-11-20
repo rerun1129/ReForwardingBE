@@ -3,7 +3,6 @@ package org.re.reforwardingbe.sea.main.framework.adapters.output;
 import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
 import org.re.reforwardingbe.sea.main.domain.model.BL;
 import org.re.reforwardingbe.sea.main.domain.model.BLId;
-import org.re.reforwardingbe.sea.main.domain.model.EntityId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +13,7 @@ public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
     List<BL> inMemoryBlMainList = new ArrayList<>();
 
     @Override
-    public Optional <BL> findBlMainById(EntityId <BLId> id) {
+    public Optional <BL> findBlMainById(BLId id) {
         return inMemoryBlMainList.stream().filter(bl -> bl.getId().equals(id)).findFirst();
     }
 
@@ -34,7 +33,7 @@ public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
     }
 
     @Override
-    public void deleteBlMainById(EntityId<BLId> blMainId) {
+    public void deleteBlMainById(BLId blMainId) {
         inMemoryBlMainList.removeIf(bl -> bl.getId().equals(blMainId));
     }
 }

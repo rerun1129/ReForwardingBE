@@ -8,13 +8,13 @@ import java.math.BigDecimal;
 
 @Getter
 public class HSCodeSpec {
-    private final EntityId<BLId> rootBlId;
-    private final EntityId <HSCode> hsCodeId;
+    private final BLId rootBlId;
+    private final HSCodeId hsCodeId;
     private final String hsCode;
     private String hsCodeDescription;
     private Boolean isMainItem;
 
-    public HSCodeSpec(EntityId <BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode, String hsCodeDescription, Boolean isMainItem) {
+    public HSCodeSpec(BLId rootBlId, HSCodeId hsCodeId, String hsCode, String hsCodeDescription, Boolean isMainItem) {
         this.rootBlId = rootBlId;
         this.hsCodeId = hsCodeId;
         this.hsCode = hsCode;
@@ -22,7 +22,7 @@ public class HSCodeSpec {
         this.isMainItem = isMainItem;
     }
 
-    public HSCodeSpec(EntityId <BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode) {
+    public HSCodeSpec(BLId rootBlId, HSCodeId hsCodeId, String hsCode) {
         this.rootBlId = rootBlId;
         this.hsCodeId = hsCodeId;
         this.hsCode = hsCode;

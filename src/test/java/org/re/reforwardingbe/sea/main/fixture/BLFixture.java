@@ -30,13 +30,13 @@ import static org.re.reforwardingbe.sea.main.domain.model.UnknownClause2.STC;
 
 public class BLFixture {
     public static BL createDefault1(){
-        EntityId <BLId> fixture1Id = EntityId.withoutId();
-        ContainerSpec containerSpec1_1 = new ContainerSpec(fixture1Id, EntityId.withoutId(), "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, BigDecimal.valueOf(550.500), BigDecimal.valueOf(0.550));
-        ContainerSpec containerSpec1_2 = new ContainerSpec(fixture1Id, EntityId.withoutId(), "ContainerNo1-2", F0FH, null, null, null, null, null, null, 50, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(1.000));
-        HSCodeSpec hsCodeSpec1_1 = new HSCodeSpec(fixture1Id, EntityId.withoutId(), "010100", "horse", true);
-        HSCodeSpec hsCodeSpec1_2 = new HSCodeSpec(fixture1Id, EntityId.withoutId(), "420100", "horse saddle", false);
-        ManifestSpec manifestSpec1_1 = new ManifestSpec(fixture1Id, EntityId.withoutId(), "ManifestNo1-1", 50, CB, BigDecimal.valueOf(550.500));
-        ManifestSpec manifestSpec1_2 = new ManifestSpec(fixture1Id, EntityId.withoutId(), "ManifestNo1-2", 50, CB, BigDecimal.valueOf(1000.000));
+        BLId fixture1Id = BLId.withoutId();
+        ContainerSpec containerSpec1_1 = new ContainerSpec(fixture1Id, ContainerId.withoutId(), "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, BigDecimal.valueOf(550.500), BigDecimal.valueOf(0.550));
+        ContainerSpec containerSpec1_2 = new ContainerSpec(fixture1Id, ContainerId.withoutId(), "ContainerNo1-2", F0FH, null, null, null, null, null, null, 50, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(1.000));
+        HSCodeSpec hsCodeSpec1_1 = new HSCodeSpec(fixture1Id, HSCodeId.withoutId(), "010100", "horse", true);
+        HSCodeSpec hsCodeSpec1_2 = new HSCodeSpec(fixture1Id, HSCodeId.withoutId(), "420100", "horse saddle", false);
+        ManifestSpec manifestSpec1_1 = new ManifestSpec(fixture1Id, ManifestId.withoutId(), "ManifestNo1-1", 50, CB, BigDecimal.valueOf(550.500));
+        ManifestSpec manifestSpec1_2 = new ManifestSpec(fixture1Id, ManifestId.withoutId(), "ManifestNo1-2", 50, CB, BigDecimal.valueOf(1000.000));
         BLSpec blSpec1 = new BLSpec(fixture1Id,
                                     new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
                                     new Party(new Shipper("shipperCode1", "shipperName1", "shipperAddress1"),
@@ -84,17 +84,15 @@ public class BLFixture {
     }
 
     public static BL createDefault2(){
-        EntityId<BLId> fixture2Id = EntityId.withoutId();
-        ContainerSpec containerSpec2_1 =
-                new ContainerSpec(fixture2Id, EntityId.withoutId(), "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(0.800));
+        BLId fixture2Id = BLId.withoutId();
+        ContainerSpec containerSpec2_1 = new ContainerSpec(fixture2Id, ContainerId.withoutId(), "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(0.800));
 
-        ContainerSpec containerSpec2_2 =
-                new ContainerSpec(fixture2Id, EntityId.withoutId(), "ContainerNo2-2", T0FR, null, null, null, null, null, null, 60, CB, BigDecimal.valueOf(1700.000), BigDecimal.valueOf(1.000));
+        ContainerSpec containerSpec2_2 = new ContainerSpec(fixture2Id, ContainerId.withoutId(), "ContainerNo2-2", T0FR, null, null, null, null, null, null, 60, CB, BigDecimal.valueOf(1700.000), BigDecimal.valueOf(1.000));
 
-        HSCodeSpec hsCodeSpec2_1 = new HSCodeSpec(fixture2Id, EntityId.withoutId(), "870380", "Battery Electric Vehicle", true);
-        HSCodeSpec hsCodeSpec2_2 = new HSCodeSpec(fixture2Id, EntityId.withoutId(), "850760", "Lithium-ion Battery", false);
-        ManifestSpec manifestSpec2_1 = new ManifestSpec(fixture2Id, EntityId.withoutId(), "ManifestNo2-1", 40, CB, BigDecimal.valueOf(1000.000));
-        ManifestSpec manifestSpec2_2 = new ManifestSpec(fixture2Id, EntityId.withoutId(), "ManifestNo2-2", 60, CB, BigDecimal.valueOf(1700.000));
+        HSCodeSpec hsCodeSpec2_1 = new HSCodeSpec(fixture2Id, HSCodeId.withoutId(), "870380", "Battery Electric Vehicle", true);
+        HSCodeSpec hsCodeSpec2_2 = new HSCodeSpec(fixture2Id, HSCodeId.withoutId(), "850760", "Lithium-ion Battery", false);
+        ManifestSpec manifestSpec2_1 = new ManifestSpec(fixture2Id, ManifestId.withoutId(), "ManifestNo2-1", 40, CB, BigDecimal.valueOf(1000.000));
+        ManifestSpec manifestSpec2_2 = new ManifestSpec(fixture2Id, ManifestId.withoutId(), "ManifestNo2-2", 60, CB, BigDecimal.valueOf(1700.000));
         BLSpec blSpec2 = new BLSpec(fixture2Id,
                                     new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
                                     new Party(new Shipper("shipperCode2", "shipperName2", "shipperAddress2"),

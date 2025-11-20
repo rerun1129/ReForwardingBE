@@ -8,8 +8,8 @@ import java.math.BigDecimal;
 
 @Getter
 public class ContainerSpec {
-    private final EntityId <BLId> rootBlId;
-    private final EntityId<Container> containerId;
+    private final BLId rootBlId;
+    private final ContainerId containerId;
     private final String containerNo;
     private final ContainerType containerType;
     private String containerSealNumber1;
@@ -23,14 +23,14 @@ public class ContainerSpec {
     private BigDecimal grossWeight;
     private BigDecimal cbm;
 
-    public ContainerSpec(EntityId<BLId> rootBlId, EntityId <Container> containerId, String containerNo, ContainerType containerType) {
+    public ContainerSpec(BLId rootBlId, ContainerId containerId, String containerNo, ContainerType containerType) {
         this.rootBlId = rootBlId;
         this.containerId = containerId;
         this.containerNo = containerNo;
         this.containerType = containerType;
     }
 
-    public ContainerSpec(EntityId <BLId> rootBlId, EntityId <Container> containerId, String containerNo,
+    public ContainerSpec(BLId rootBlId, ContainerId containerId, String containerNo,
                          ContainerType containerType, String containerSealNumber1, String containerSealNumber2,
                          String containerSealNumber3, String containerSealNumber4, String containerSealNumber5,
                          String containerSealNumber6, Integer packageQuantity, PackageUnit packageUnit, BigDecimal grossWeight, BigDecimal cbm) {
