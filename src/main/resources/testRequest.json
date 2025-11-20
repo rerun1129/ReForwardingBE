@@ -1,0 +1,120 @@
+{
+    "id": {
+        "value": "BL-2024-001"
+    },
+    "header": {
+        "blNumber": "HLCU1234567",
+        "blType": "ORIGINAL",
+        "issueDate": "2024-11-20",
+        "placeOfIssue": "BUSAN"
+    },
+    "party": {
+        "shipper": {
+            "name": "Samsung Electronics",
+            "address": "Seoul, Korea",
+            "contact": "02-1234-5678"
+        },
+        "consignee": {
+            "name": "Apple Inc.",
+            "address": "Cupertino, CA, USA",
+            "contact": "+1-408-996-1010"
+        },
+        "notifyParty": {
+            "name": "ABC Logistics",
+            "address": "Los Angeles, CA, USA"
+        }
+    },
+    "schedule": {
+        "departurePort": "KRPUS",
+        "arrivalPort": "USLAX",
+        "etd": "2024-11-25T10:00:00",
+        "eta": "2024-12-10T14:00:00",
+        "vesselName": "EVER GIVEN",
+        "voyageNumber": "24112N"
+    },
+    "issue": {
+        "issuePlace": "BUSAN",
+        "issueDate": "2024-11-20",
+        "issuedBy": "Hyundai Merchant Marine"
+    },
+    "cargo": {
+        "totalPackages": 1000,
+        "packageType": "CARTON",
+        "grossWeight": 25000.5,
+        "grossWeightUnit": "KG",
+        "measurement": 150.75,
+        "measurementUnit": "CBM"
+    },
+    "contract": {
+        "contractNumber": "SC-2024-001",
+        "freightTerms": "PREPAID",
+        "paymentTerms": "CIF"
+    },
+    "performance": {
+        "onBoardDate": "2024-11-24",
+        "receiptPlace": "BUSAN",
+        "deliveryPlace": "LOS ANGELES"
+    },
+    "mark": {
+        "shippingMarks": "SAMSUNG\nMADE IN KOREA\nHANDLE WITH CARE",
+        "containerNumbers": ["HLCU1234567", "HLCU1234568"]
+    },
+    "description": {
+        "goodsDescription": "Electronic Components - Semiconductors",
+        "hsCode": "8542.31",
+        "dangerousGoods": false
+    },
+    "edi": {
+        "ediType": "EDIFACT",
+        "messageType": "IFTMBF",
+        "version": "D.96A"
+    },
+    "containers": [
+        {
+            "containerNumber": "HLCU1234567",
+            "containerType": "40HC",
+            "sealNumber": "SEAL123456",
+            "packageCount": 500,
+            "weight": 12500.25,
+            "weightUnit": "KG"
+        },
+        {
+            "containerNumber": "HLCU1234568",
+            "containerType": "40HC",
+            "sealNumber": "SEAL123457",
+            "packageCount": 500,
+            "weight": 12500.25,
+            "weightUnit": "KG"
+        }
+    ],
+    "hsCodes": [
+        {
+            "code": "8542.31",
+            "description": "Electronic integrated circuits: Processors and controllers",
+            "quantity": 800,
+            "value": 500000.00,
+            "currency": "USD"
+        },
+        {
+            "code": "8542.32",
+            "description": "Electronic integrated circuits: Memories",
+            "quantity": 200,
+            "value": 150000.00,
+            "currency": "USD"
+        }
+    ],
+    "manifests": [
+        {
+            "manifestNumber": "MF-001",
+            "manifestDate": "2024-11-24",
+            "customsOffice": "BUSAN CUSTOMS",
+            "status": "SUBMITTED"
+        },
+        {
+            "manifestNumber": "MF-002",
+            "manifestDate": "2024-11-24",
+            "customsOffice": "LA CUSTOMS",
+            "status": "PENDING"
+        }
+    ]
+}

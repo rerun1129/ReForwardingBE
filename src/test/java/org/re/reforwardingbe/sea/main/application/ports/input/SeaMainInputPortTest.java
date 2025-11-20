@@ -10,7 +10,6 @@ import org.re.reforwardingbe.sea.main.fixture.BLFixture;
 import org.re.reforwardingbe.sea.main.framework.adapters.output.SeaMainInMemoryAdapter;
 
 import java.util.List;
-import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.re.reforwardingbe.sea.main.domain.model.BLType.ORIGINAL;
@@ -23,7 +22,6 @@ class SeaMainInputPortTest {
     private final BL blFixture1 = BLFixture.createDefault1();
     private final BL blFixture2 = BLFixture.createDefault2();
 
-    //TODO : B/L의 요청 값을 처리하는 Request DTO를 도메인 레이어에 작성하여 코드 줄이기
     @BeforeEach
     void init(){
         seaMainOutputPort.saveBlMain(blFixture1);

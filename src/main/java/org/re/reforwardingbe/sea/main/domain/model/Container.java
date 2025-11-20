@@ -9,7 +9,7 @@ public class Container {
     @Getter
     private EntityId<BLId> rootBlId;
     @Getter
-    private EntityId <Container> containerId;
+    private EntityId<Container> containerId;
     private String containerNo;
     private ContainerType containerType;
     private String containerSealNumber1;
