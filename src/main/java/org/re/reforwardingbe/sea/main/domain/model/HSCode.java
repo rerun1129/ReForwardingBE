@@ -28,8 +28,7 @@ public class HSCode {
     }
 
     public static HSCode withEssential(EntityId<BLId> rootBlId, EntityId <HSCode> hsCodeId, String hsCode) {
-        HSCodeSpec spec = HSCodeSpec.builder().rootBlId(rootBlId).hsCodeId(hsCodeId).hsCode(hsCode).build();
-        return new HSCode(spec);
+        return new HSCode(new HSCodeSpec(rootBlId, hsCodeId, hsCode));
     }
 
     public static HSCode empty() {

@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.re.reforwardingbe.sea.main.application.ports.output.SeaMainOutputPort;
 import org.re.reforwardingbe.sea.main.domain.model.BL;
 import org.re.reforwardingbe.sea.main.domain.model.*;
+import org.re.reforwardingbe.sea.main.domain.specification.BLSpec;
 import org.re.reforwardingbe.sea.main.domain.specification.ContainerSpec;
 import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
 import org.re.reforwardingbe.sea.main.domain.specification.ManifestSpec;
@@ -41,215 +42,114 @@ class SeaMainInputPortTest {
     private BL blFixture2;
 
     //TODO : 픽스쳐를 생성해주는 메서드를 테스트 모듈에 작성 / B/L의 요청 값을 처리하는 Request DTO를 도메인 레이어에 작성하여 코드 줄이기
-    //TODO : B/L 생성 객체들에 한정한 빌더 패턴 작성
+    //TODO : 픽스쳐 생성 메서드는 디폴트 / 극한값 등을 상정해서 만들고 쉽게 가져다 쓰게 해야함
     @BeforeEach
     void init(){
         EntityId<BLId> fixture1Id = EntityId.withoutId();
-        ContainerSpec containerSpec1_1 = ContainerSpec.builder()
-                                                   .rootBlId(fixture1Id)
-                                                   .containerId(EntityId.withoutId())
-                                                   .containerNo("ContainerNo1-1")
-                                                   .containerType(F0FH)
-                                                   .containerSealNumber1("1")
-                                                   .containerSealNumber2("2")
-                                                   .containerSealNumber3("3")
-                                                   .containerSealNumber4("4")
-                                                   .containerSealNumber5("5")
-                                                   .containerSealNumber6("6")
-                                                   .packageQuantity(50)
-                                                   .packageUnit(CB)
-                                                   .grossWeight(BigDecimal.valueOf(550.500))
-                                                   .cbm(BigDecimal.valueOf(0.550))
-                                                   .build();
-        ContainerSpec containerSpec1_2 = ContainerSpec.builder()
-                                                      .rootBlId(fixture1Id)
-                                                      .containerId(EntityId.withoutId())
-                                                      .containerNo("ContainerNo1-2")
-                                                      .containerType(F0FH)
-                                                      .packageQuantity(50)
-                                                      .packageUnit(CB)
-                                                      .grossWeight(BigDecimal.valueOf(1000.000))
-                                                      .cbm(BigDecimal.valueOf(1.000))
-                                                      .build();
+        ContainerSpec containerSpec1_1 =
+                new ContainerSpec(fixture1Id, EntityId.withoutId(), "ContainerNo1-1", F0FH, "1", "2", "3", "4", "5", "6", 50, CB, BigDecimal.valueOf(550.500), BigDecimal.valueOf(0.550));
+        ContainerSpec containerSpec1_2 =
+                new ContainerSpec(fixture1Id, EntityId.withoutId(), "ContainerNo1-2", F0FH, null, null, null, null, null, null, 50, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(1.000));
 
-        HSCodeSpec hsCodeSpec1_1 = HSCodeSpec.builder()
-                                            .rootBlId(fixture1Id)
-                                            .hsCodeId(EntityId.withoutId())
-                                            .hsCode("010100")
-                                            .hsCodeDescription("horse")
-                                            .isMainItem(true)
-                                            .build();
+        HSCodeSpec hsCodeSpec1_1 = new HSCodeSpec(fixture1Id, EntityId.withoutId(), "010100", "horse", true);
+        HSCodeSpec hsCodeSpec1_2 = new HSCodeSpec(fixture1Id, EntityId.withoutId(), "420100", "horse saddle", false);
+        ManifestSpec manifestSpec1_1 = new ManifestSpec(fixture1Id, EntityId.withoutId(), "ManifestNo1-1", 50, CB, BigDecimal.valueOf(550.500));
+        ManifestSpec manifestSpec1_2 = new ManifestSpec(fixture1Id, EntityId.withoutId(), "ManifestNo1-2", 50, CB, BigDecimal.valueOf(1000.000));
 
-        HSCodeSpec hsCodeSpec1_2 = HSCodeSpec.builder()
-                                            .rootBlId(fixture1Id)
-                                            .hsCodeId(EntityId.withoutId())
-                                            .hsCode("420100")
-                                            .hsCodeDescription("horse saddle")
-                                            .isMainItem(false)
-                                            .build();
-        ManifestSpec manifestSpec1_1 = ManifestSpec.builder()
-                                                    .rootBlId(fixture1Id)
-                                                    .manifestId(EntityId.withoutId())
-                                                    .manifestNo("ManifestNo1-1")
-                                                    .manifestQuantity(50)
-                                                    .manifestUnit(CB)
-                                                    .manifestWeight(BigDecimal.valueOf(550.500))
-                                                    .build();
-        ManifestSpec manifestSpec1_2 = ManifestSpec.builder()
-                                                    .rootBlId(fixture1Id)
-                                                    .manifestId(EntityId.withoutId())
-                                                    .manifestNo("ManifestNo1-2")
-                                                    .manifestQuantity(50)
-                                                    .manifestUnit(CB)
-                                                    .manifestWeight(BigDecimal.valueOf(1000.000))
-                                                    .build();
-
-        blFixture1 = new BL(
-            fixture1Id,
-            new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
-            new Party(new Shipper("shipperCode1", "shipperName1", "shipperAddress1"),
-                      new Consignee("consigneeCode1", "consigneeName1", "consigneeAddress1"),
-                      new Notify("notifyCode1", "notifyName1", "notifyAddress1")),
-            new Schedule(
-                new Liner("linerCode1", "linerName1" ),
-                new Vessel("vesselCode1", "vesselName1" , "vesselCountryCode1"),
-                "voyageNumber1", "20251111", "20251113", "20251111",
-                new SeaPort("receivePortCode1", "receivePortName1" ),
-                new SeaPort("loadPortCode1", "loadPortName1" ),
-                new SeaPort("dischargePortCode1", "dischargePortName1" ),
-                new SeaPort("deliveryPortCode1", "deliveryPortName1" ),
-                new SeaPort("destinationPortCode1", "destinationPortName1" )
-            ),
-            new Issue("20251112", 3, new IssuePlace("issuePlaceCode1", "issuePlaceName1")),
-            new Cargo(
-                new CargoPackage("cargoPackageCode1", "cargoPackageName1", 100),
-                new BigDecimal("1550.500"),
-                new BigDecimal("1.550"),
-                new BigDecimal("1.550")
-            ),
-            new Contract(new Incoterms("CIF"), COLLECT, new PayableAt("payableAtCode1", "payableAtName1"), false),
-            new Performance(
-                new Customer("CustomerCode1", "CustomerName1" ),
-                new Partner("DocPartnerCode1", "DocPartnerName1" , "DocPartnerAddress1"),
-                new Partner("SettlePartnerCode1", "SettlePartnerName1" , "SettlePartnerAddress1"),
-                new BusinessUser("BusinessUserCode1", "BusinessUserName1" ),
-                new BusinessUser("BusinessUserCode1", "BusinessUserName1" ),
-                new BusinessTeam("BusinessTeamCode1", "BusinessTeamName1")
-            ),
-            new Mark("""
+        BLSpec blSpec1 = new BLSpec(fixture1Id,
+                                    new Header(HOUSE, "houseBl1", "masterBl1", LCL, CFS_TO_CY, ORIGINAL),
+                                    new Party(new Shipper("shipperCode1", "shipperName1", "shipperAddress1"),
+                                              new Consignee("consigneeCode1", "consigneeName1", "consigneeAddress1"),
+                                              new Notify("notifyCode1", "notifyName1", "notifyAddress1")),
+                                    new Schedule(
+                                            new Liner("linerCode1", "linerName1" ),
+                                            new Vessel("vesselCode1", "vesselName1" , "vesselCountryCode1"),
+                                            "voyageNumber1", "20251111", "20251113", "20251111",
+                                            new SeaPort("receivePortCode1", "receivePortName1" ),
+                                            new SeaPort("loadPortCode1", "loadPortName1" ),
+                                            new SeaPort("dischargePortCode1", "dischargePortName1" ),
+                                            new SeaPort("deliveryPortCode1", "deliveryPortName1" ),
+                                            new SeaPort("destinationPortCode1", "destinationPortName1" )
+                                    ),
+                                    new Issue("20251112", 3, new IssuePlace("issuePlaceCode1", "issuePlaceName1")),
+                                    new Cargo(
+                                            new CargoPackage("cargoPackageCode1", "cargoPackageName1", 100),
+                                            new BigDecimal("1550.500"),
+                                            new BigDecimal("1.550"),
+                                            new BigDecimal("1.550")
+                                    ),
+                                    new Contract(new Incoterms("CIF"), COLLECT, new PayableAt("payableAtCode1", "payableAtName1"), false),
+                                    new Performance(
+                                            new Customer("CustomerCode1", "CustomerName1" ),
+                                            new Partner("DocPartnerCode1", "DocPartnerName1" , "DocPartnerAddress1"),
+                                            new Partner("SettlePartnerCode1", "SettlePartnerName1" , "SettlePartnerAddress1"),
+                                            new BusinessUser("BusinessUserCode1", "BusinessUserName1" ),
+                                            new BusinessUser("BusinessUserCode1", "BusinessUserName1" ),
+                                            new BusinessTeam("BusinessTeamCode1", "BusinessTeamName1")
+                                    ),
+                                    new Mark("""
                 ACS F&L LTD.
                 BUSAN PORT
                 ITEM : GOLF GLOVE
                 C/T NO. : 1 OF 9
                 MADE IN INDONESIA
                 """),
-            new Description(SLC, STC, "SHEEPSKIN GOLF GLOVES"),
-            new EDI("ediBlNo1", "ediBlItem1", EXPORT, new SeaPort("transshipmentPortCode1", "transshipmentPortName1")),
-            new ArrayList <>(List.of(Container.of(containerSpec1_1), Container.of(containerSpec1_2))),
-            new ArrayList <>(List.of(HSCode.of(hsCodeSpec1_1), HSCode.of(hsCodeSpec1_2))),
-            new ArrayList <>(List.of(Manifest.of(manifestSpec1_1), Manifest.of(manifestSpec1_2)))
-        );
+                                    new Description(SLC, STC, "SHEEPSKIN GOLF GLOVES"),
+                                    new EDI("ediBlNo1", "ediBlItem1", EXPORT, new SeaPort("transshipmentPortCode1", "transshipmentPortName1")),
+                                    new ArrayList <>(List.of(Container.of(containerSpec1_1), Container.of(containerSpec1_2))),
+                                    new ArrayList <>(List.of(HSCode.of(hsCodeSpec1_1), HSCode.of(hsCodeSpec1_2))),
+                                    new ArrayList <>(List.of(Manifest.of(manifestSpec1_1), Manifest.of(manifestSpec1_2))));
+        blFixture1 = BL.of(blSpec1);
 
         EntityId<BLId> fixture2Id = EntityId.withoutId();
-        ContainerSpec containerSpec2_1 = ContainerSpec.builder()
-                                                      .rootBlId(fixture2Id)
-                                                      .containerId(EntityId.withoutId())
-                                                      .containerNo("ContainerNo2-1")
-                                                      .containerType(T0FR)
-                                                      .containerSealNumber1("1")
-                                                      .containerSealNumber2("2")
-                                                      .containerSealNumber3("3")
-                                                      .containerSealNumber4("4")
-                                                      .containerSealNumber5("5")
-                                                      .containerSealNumber6("6")
-                                                      .packageQuantity(40)
-                                                      .packageUnit(CB)
-                                                      .grossWeight(BigDecimal.valueOf(1000.000))
-                                                      .cbm(BigDecimal.valueOf(0.800))
-                                                      .build();
+        ContainerSpec containerSpec2_1 =
+                new ContainerSpec(fixture2Id, EntityId.withoutId(), "ContainerNo2-1", T0FR, "1", "2", "3", "4", "5", "6", 40, CB, BigDecimal.valueOf(1000.000), BigDecimal.valueOf(0.800));
 
-        ContainerSpec containerSpec2_2 = ContainerSpec.builder()
-                                                      .rootBlId(fixture2Id)
-                                                      .containerId(EntityId.withoutId())
-                                                      .containerNo("ContainerNo2-2")
-                                                      .containerType(T0FR)
-                                                      .packageQuantity(60)
-                                                      .packageUnit(CB)
-                                                      .grossWeight(BigDecimal.valueOf(1700.000))
-                                                      .cbm(BigDecimal.valueOf(1.000))
-                                                      .build();
+        ContainerSpec containerSpec2_2 =
+                new ContainerSpec(fixture2Id, EntityId.withoutId(), "ContainerNo2-2", T0FR, null, null, null, null, null, null, 60, CB, BigDecimal.valueOf(1700.000), BigDecimal.valueOf(1.000));
 
-        HSCodeSpec hsCodeSpec2_1 = HSCodeSpec.builder()
-                                             .rootBlId(fixture2Id)
-                                             .hsCodeId(EntityId.withoutId())
-                                             .hsCode("870380")
-                                             .hsCodeDescription("Battery Electric Vehicle")
-                                             .isMainItem(true)
-                                             .build();
-
-        HSCodeSpec hsCodeSpec2_2 = HSCodeSpec.builder()
-                                             .rootBlId(fixture2Id)
-                                             .hsCodeId(EntityId.withoutId())
-                                             .hsCode("850760")
-                                             .hsCodeDescription("Lithium-ion Battery")
-                                             .isMainItem(false)
-                                             .build();
-        ManifestSpec manifestSpec2_1 = ManifestSpec.builder()
-                                                   .rootBlId(fixture2Id)
-                                                   .manifestId(EntityId.withoutId())
-                                                   .manifestNo("ManifestNo2-1")
-                                                   .manifestQuantity(40)
-                                                   .manifestUnit(CB)
-                                                   .manifestWeight(BigDecimal.valueOf(1000.000))
-                                                   .build();
-        ManifestSpec manifestSpec2_2 = ManifestSpec.builder()
-                                                   .rootBlId(fixture2Id)
-                                                   .manifestId(EntityId.withoutId())
-                                                   .manifestNo("ManifestNo2-2")
-                                                   .manifestQuantity(60)
-                                                   .manifestUnit(CB)
-                                                   .manifestWeight(BigDecimal.valueOf(1700.000))
-                                                   .build();
-
-        blFixture2 = new BL(
-            fixture2Id,
-            new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
-            new Party(new Shipper("shipperCode2", "shipperName2", "shipperAddress2"),
-                      new Consignee("consigneeCode2", "consigneeName2", "consigneeAddress2"),
-                      new Notify("notifyCode2", "notifyName2", "notifyAddress2")),
-            new Schedule(
-                new Liner("linerCode2", "linerName2" ),
-                new Vessel("vesselCode2", "vesselName2" , "vesselCountryCode2"),
-                "voyageNumber2", "20251211", "20251213", "20251211",
-                new SeaPort("receivePortCode2", "receivePortName2" ),
-                new SeaPort("loadPortCode2", "loadPortName2" ),
-                new SeaPort("dischargePortCode2", "dischargePortName2" ),
-                new SeaPort("deliveryPortCode2", "deliveryPortName2" ),
-                new SeaPort("destinationPortCode2", "destinationPortName2" )
-            ),
-            new Issue("20251112", 1, new IssuePlace("issuePlaceCode1", "issuePlaceName1")),
-            new Cargo(
-                new CargoPackage("cargoPackageCode1", "cargoPackageName1", 100),
-                new BigDecimal("2700.000"),
-                new BigDecimal("1.800"),
-                new BigDecimal("2.700")
-            ),
-            new Contract(new Incoterms("FOB"), PREPAID, new PayableAt("payableAtCode2", "payableAtName2"), false),
-            new Performance(
-                new Customer("CustomerCode2", "CustomerName2" ),
-                new Partner("DocPartnerCode2", "DocPartnerName2" , "DocPartnerAddress2"),
-                new Partner("SettlePartnerCode2", "SettlePartnerName2" , "SettlePartnerAddress2"),
-                new BusinessUser("BusinessUserCode2", "BusinessUserName2" ),
-                new BusinessUser("BusinessUserCode2", "BusinessUserName2" ),
-                new BusinessTeam("BusinessTeamCode2", "BusinessTeamName2")
-            ),
-            new Mark("N/M"),
-            new Description(SLC, STC, "9 CARTONS = 2,100 PIECES OF"),
-            new EDI("ediBlNo2", "ediBlItem2", IMPORT, new SeaPort("transshipmentPortCode2", "transshipmentPortName2")),
-            new ArrayList <>(List.of( Container.of(containerSpec2_1), Container.of(containerSpec2_2))),
-            new ArrayList <>(List.of(HSCode.of(hsCodeSpec2_1), HSCode.of(hsCodeSpec2_2))),
-            new ArrayList <>(List.of(Manifest.of(manifestSpec2_1), Manifest.of(manifestSpec2_2)))
-        );
+        HSCodeSpec hsCodeSpec2_1 = new HSCodeSpec(fixture2Id, EntityId.withoutId(), "870380", "Battery Electric Vehicle", true);
+        HSCodeSpec hsCodeSpec2_2 = new HSCodeSpec(fixture2Id, EntityId.withoutId(), "850760", "Lithium-ion Battery", false);
+        ManifestSpec manifestSpec2_1 = new ManifestSpec(fixture2Id, EntityId.withoutId(), "ManifestNo2-1", 40, CB, BigDecimal.valueOf(1000.000));
+        ManifestSpec manifestSpec2_2 = new ManifestSpec(fixture2Id, EntityId.withoutId(), "ManifestNo2-2", 60, CB, BigDecimal.valueOf(1700.000));
+        BLSpec blSpec2 = new BLSpec(fixture2Id,
+                                    new Header(DIRECT, "houseBl2", "masterBl2", FCL, CY_TO_CFS, SURRENDER),
+                                    new Party(new Shipper("shipperCode2", "shipperName2", "shipperAddress2"),
+                                              new Consignee("consigneeCode2", "consigneeName2", "consigneeAddress2"),
+                                              new Notify("notifyCode2", "notifyName2", "notifyAddress2")),
+                                    new Schedule(
+                                            new Liner("linerCode2", "linerName2" ),
+                                            new Vessel("vesselCode2", "vesselName2" , "vesselCountryCode2"),
+                                            "voyageNumber2", "20251211", "20251213", "20251211",
+                                            new SeaPort("receivePortCode2", "receivePortName2" ),
+                                            new SeaPort("loadPortCode2", "loadPortName2" ),
+                                            new SeaPort("dischargePortCode2", "dischargePortName2" ),
+                                            new SeaPort("deliveryPortCode2", "deliveryPortName2" ),
+                                            new SeaPort("destinationPortCode2", "destinationPortName2" )
+                                    ),
+                                    new Issue("20251112", 1, new IssuePlace("issuePlaceCode1", "issuePlaceName1")),
+                                    new Cargo(
+                                            new CargoPackage("cargoPackageCode1", "cargoPackageName1", 100),
+                                            new BigDecimal("2700.000"),
+                                            new BigDecimal("1.800"),
+                                            new BigDecimal("2.700")
+                                    ),
+                                    new Contract(new Incoterms("FOB"), PREPAID, new PayableAt("payableAtCode2", "payableAtName2"), false),
+                                    new Performance(
+                                            new Customer("CustomerCode2", "CustomerName2" ),
+                                            new Partner("DocPartnerCode2", "DocPartnerName2" , "DocPartnerAddress2"),
+                                            new Partner("SettlePartnerCode2", "SettlePartnerName2" , "SettlePartnerAddress2"),
+                                            new BusinessUser("BusinessUserCode2", "BusinessUserName2" ),
+                                            new BusinessUser("BusinessUserCode2", "BusinessUserName2" ),
+                                            new BusinessTeam("BusinessTeamCode2", "BusinessTeamName2")
+                                    ),
+                                    new Mark("N/M"),
+                                    new Description(SLC, STC, "9 CARTONS = 2,100 PIECES OF"),
+                                    new EDI("ediBlNo2", "ediBlItem2", IMPORT, new SeaPort("transshipmentPortCode2", "transshipmentPortName2")),
+                                    new ArrayList <>(List.of(Container.of(containerSpec2_1), Container.of(containerSpec2_2))),
+                                    new ArrayList <>(List.of(HSCode.of(hsCodeSpec2_1), HSCode.of(hsCodeSpec2_2))),
+                                    new ArrayList <>(List.of(Manifest.of(manifestSpec2_1), Manifest.of(manifestSpec2_2))));
+        blFixture2 = BL.of(blSpec2);
         seaMainOutputPort.saveBlMain(blFixture1);
         seaMainOutputPort.saveBlMain(blFixture2);
     }
@@ -309,16 +209,16 @@ class SeaMainInputPortTest {
     void testSaveBlMain(){
         //given
         EntityId<BLId> toAddBlId = EntityId.withoutId();
-        BL blInputEssentialField = new BL(toAddBlId,
-                                          new Header(HOUSE, "HouseNumberGiven1", FCL, ORIGINAL),
-                                          new Performance(new Customer("CustomerCodeGiven1", "CustomerNameGiven1"), new Partner("PartnerCodeGiven1", "PartnerNameGiven1", "PartnerAddressGiven1"),
-                                       new BusinessUser("UserCodeGiven1", "UserNameGiven1"), new BusinessTeam("TeamCodeGiven1", "TeamNameGiven1")
-                       ),
-                                          new Schedule("20251116", "20251118",
-                                    new SeaPort("POLCodeGiven1", "POLNameGiven1"), new SeaPort("PODCodeGiven1", "PODNameGiven1"),
-                                    new Vessel("VesselCodeGiven1", "VesselNameGiven1", "VesselCountryGiven1"), "VoyageNumberGiven1"
-                       )
-        );
+        BL blInputEssentialField = BL.withEssential(toAddBlId, new Header(HOUSE, "HouseNumberGiven1", FCL, ORIGINAL),
+                                    new Performance(new Customer("CustomerCodeGiven1", "CustomerNameGiven1"),
+                                                    new Partner("PartnerCodeGiven1", "PartnerNameGiven1", "PartnerAddressGiven1"),
+                                                    new BusinessUser("UserCodeGiven1", "UserNameGiven1"),
+                                                    new BusinessTeam("TeamCodeGiven1", "TeamNameGiven1")),
+                                    new Schedule("20251116", "20251118",
+                                                    new SeaPort("POLCodeGiven1", "POLNameGiven1"),
+                                                    new SeaPort("PODCodeGiven1", "PODNameGiven1"),
+                                                    new Vessel("VesselCodeGiven1", "VesselNameGiven1", "VesselCountryGiven1"),
+                                                    "VoyageNumberGiven1"));
         List<BL> allBlsBeforeSave = seaMainOutputPort.findBlMainAll();
         int beforeAddedAllBlSize = allBlsBeforeSave.size();
         //when

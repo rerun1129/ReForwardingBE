@@ -9,7 +9,7 @@ public enum PackageUnit {
     BE("BUNDLE"),
     BG("BAG"),
     BJ("BUCKET"),
-    BL("BALE"),
+    BALE("BALE"),
     BN("BUNDLE"),
     BR("BAR"),
     BV("BOTTLE, BULBOUS"),

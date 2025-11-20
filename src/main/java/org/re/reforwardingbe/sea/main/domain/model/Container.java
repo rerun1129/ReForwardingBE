@@ -49,13 +49,7 @@ public class Container {
     }
 
     public static Container withEssential(EntityId<BLId> rootBlId, EntityId <Container> containerId, String containerNo, ContainerType containerType) {
-        ContainerSpec containerSpec = ContainerSpec.builder()
-                                                   .rootBlId(rootBlId)
-                                                   .containerId(containerId)
-                                                   .containerNo(containerNo)
-                                                   .containerType(containerType)
-                                                   .build();
-        return new Container(containerSpec);
+        return new Container(new ContainerSpec(rootBlId, containerId, containerNo, containerType));
     }
 
     public static Container empty() {

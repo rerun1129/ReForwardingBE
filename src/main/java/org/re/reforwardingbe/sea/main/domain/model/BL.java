@@ -1,20 +1,20 @@
 package org.re.reforwardingbe.sea.main.domain.model;
 
 import lombok.Getter;
+import org.re.reforwardingbe.sea.main.domain.specification.BLSpec;
 
 import java.util.List;
 
 public class BL {
-
     @Getter
-    private final EntityId<BLId> id;
-    private final Header header;
+    private EntityId<BLId> id;
+    private Header header;
     private Party party;
-    private final Schedule schedule;
+    private Schedule schedule;
     private Issue issue;
     private Cargo cargo;
     private Contract contract;
-    private final Performance performance;
+    private Performance performance;
     private Mark mark;
     private Description description;
     private EDI edi;
@@ -23,44 +23,31 @@ public class BL {
     private List<HSCode> hsCodes;
     private List<Manifest> manifests;
 
-    //TODO : 필수 값을 담은 생성자와 모든 값을 담는 생성자 등을 분리 / 정적 팩토리 메서드로 작성할 수 있는 구조
-    public BL(EntityId<BLId> id, Header header, Performance performance, Schedule schedule) {
-        this.id = id;
-        this.header = header;
-        this.schedule = schedule;
-        this.performance = performance;
+    private BL() {}
+
+    private BL(BLSpec spec) {
+        this.id = spec.getId();
+        this.header = spec.getHeader();
+        this.party = spec.getParty();
+        this.schedule = spec.getSchedule();
+        this.issue = spec.getIssue();
+        this.cargo = spec.getCargo();
+        this.contract = spec.getContract();
+        this.performance = spec.getPerformance();
+        this.mark = spec.getMark();
+        this.description = spec.getDescription();
+        this.edi = spec.getEdi();
+        this.containers = spec.getContainers();
+        this.hsCodes = spec.getHsCodes();
+        this.manifests = spec.getManifests();
     }
 
-    public BL(EntityId<BLId> id, Header header, Party party, Schedule schedule, Issue issue, Cargo cargo, Contract contract, Performance performance, Mark mark, Description description, EDI edi) {
-        this.id = id;
-        this.header = header;
-        this.party = party;
-        this.schedule = schedule;
-        this.issue = issue;
-        this.cargo = cargo;
-        this.contract = contract;
-        this.performance = performance;
-        this.mark = mark;
-        this.description = description;
-        this.edi = edi;
+    public static BL of(BLSpec spec){
+        return new BL(spec);
     }
 
-    public BL(EntityId<BLId> id, Header header, Party party, Schedule schedule, Issue issue, Cargo cargo, Contract contract, Performance performance, Mark mark, Description description, EDI edi,
-              List<Container> containers, List<HSCode> hsCodes, List<Manifest> manifests) {
-        this.id = id;
-        this.header = header;
-        this.party = party;
-        this.schedule = schedule;
-        this.issue = issue;
-        this.cargo = cargo;
-        this.contract = contract;
-        this.performance = performance;
-        this.mark = mark;
-        this.description = description;
-        this.edi = edi;
-        this.containers = containers;
-        this.hsCodes = hsCodes;
-        this.manifests = manifests;
+    public static BL withEssential(EntityId<BLId> id, Header header, Performance performance, Schedule schedule) {
+        return new BL(new BLSpec(id, header, performance, schedule));
     }
 
     public List<Container> findAllContainers() {

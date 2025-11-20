@@ -33,8 +33,7 @@ public class Manifest {
     }
 
     public static Manifest withEssential(EntityId<BLId> rootBlId, EntityId <Manifest> manifestId, String manifestNo) {
-        ManifestSpec spec = ManifestSpec.builder().rootBlId(rootBlId).manifestId(manifestId).manifestNo(manifestNo).build();
-        return new Manifest(spec);
+        return new Manifest(new ManifestSpec(rootBlId, manifestId, manifestNo));
     }
 
     public static Manifest empty() {
