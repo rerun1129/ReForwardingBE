@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 
 @Getter
 public class ManifestSpec {
-    private EntityId<BLId> rootBlId;
-    private EntityId <Manifest> manifestId;
-    private String manifestNo;
+    private final EntityId<BLId> rootBlId;
+    private final EntityId <Manifest> manifestId;
+    private final String manifestNo;
     private Integer manifestQuantity;
     private PackageUnit manifestUnit;
     private BigDecimal manifestWeight;

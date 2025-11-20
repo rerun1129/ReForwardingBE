@@ -8,10 +8,10 @@ import java.math.BigDecimal;
 
 @Getter
 public class ContainerSpec {
-    private EntityId <BLId> rootBlId;
-    private EntityId<Container> containerId;
-    private String containerNo;
-    private ContainerType containerType;
+    private final EntityId <BLId> rootBlId;
+    private final EntityId<Container> containerId;
+    private final String containerNo;
+    private final ContainerType containerType;
     private String containerSealNumber1;
     private String containerSealNumber2;
     private String containerSealNumber3;
