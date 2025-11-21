@@ -1,10 +1,7 @@
 package org.re.reforwardingbe.sea.main.domain.specification;
 
-import lombok.Builder;
 import lombok.Getter;
 import org.re.reforwardingbe.sea.main.domain.model.*;
-
-import java.math.BigDecimal;
 
 @Getter
 public class HSCodeSpec {

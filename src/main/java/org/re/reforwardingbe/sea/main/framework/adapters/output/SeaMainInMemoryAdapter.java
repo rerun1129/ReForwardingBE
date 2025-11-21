@@ -7,7 +7,6 @@ import org.re.reforwardingbe.sea.main.domain.model.BLId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class SeaMainInMemoryAdapter implements SeaMainOutputPort {
     List<BL> inMemoryBlMainList = new ArrayList<>();

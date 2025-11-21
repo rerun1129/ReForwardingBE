@@ -1,7 +1,6 @@
 package org.re.reforwardingbe.sea.main.domain.model;
 
 import lombok.Getter;
-import org.re.reforwardingbe.sea.main.domain.specification.HSCodeSpec;
 import org.re.reforwardingbe.sea.main.domain.specification.ManifestSpec;
 
 import java.math.BigDecimal;
