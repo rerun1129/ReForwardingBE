@@ -1,15 +1,16 @@
 package org.re.reforwardingbe.sea.main.application.ports.output;
 
-import org.re.reforwardingbe.sea.main.domain.entity.BL;
+import org.re.reforwardingbe.sea.main.domain.model.BL;
+import org.re.reforwardingbe.sea.main.domain.model.BLId;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface SeaMainOutputPort {
-    BL findBlMainById(UUID savedId);
+    Optional <BL> findBlMainById(BLId id);
     List<BL> findBlMainAll();
 
     void saveBlMain(BL bl);
 
-    void deleteBlMainById(UUID blMainId);
+    void deleteBlMainById(BLId id);
 }
